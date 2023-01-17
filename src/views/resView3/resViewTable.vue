@@ -63,7 +63,7 @@
 
 </template>
 
-<script>
+<script lang="js">
 import resBlock from './resBlock.vue'
 import emptyBlock from './emptyBlock.vue'
 import { resViewStore } from '/src/stores/resView.js'

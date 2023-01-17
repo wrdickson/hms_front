@@ -15,6 +15,12 @@
         <el-form-item :label="i18Title">
           <el-input v-model="form.title"></el-input>
         </el-form-item>
+        <el-form-item :label="i18IsActive">
+          <el-select v-model="form.isActive" placeholder="Select">
+            <el-option :label="i18True" value="1"/>
+            <el-option :label="i18False" value="0"/>
+          </el-select>
+        </el-form-item>
         <el-form-item :label="i18ChildOf">
           <el-select v-model="form.childOf" placeholder="Select">
               <el-option label="0" value="0"/>
@@ -76,7 +82,8 @@ export default {
         displayOrder: null,
         showChildren: null,
         people: null,
-        beds: null
+        beds: null,
+        isActive: "1"
       }
     }
   },
@@ -96,7 +103,8 @@ export default {
     i18True () { return this.$i18n.t('message.true') },
     i18Title () { return this.$i18n.t('message.title') },
     i18Type () { return this.$i18n.t('message.type') },
-    i18Yes () { return this.$i18n.t('message.yes') }
+    i18Yes () { return this.$i18n.t('message.yes') },
+    i18IsActive () { return this.$i18n.t('message.isActive') }
   },
   methods: {
     createSpace () {

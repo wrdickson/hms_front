@@ -1,3 +1,5 @@
+
+
 <template>
   <el-menu @select="menuSelect" :router="true">
     <localeSwitch/>

@@ -1,5 +1,5 @@
 <template>
-  <el-container style="height: 500px;">
+  <el-container style="height: 600px;">
     <el-aside width="200px">
       <el-menu class="el-menu-dashboard">
         <el-menu-item @click="hideAllViews(), showSpaceEdit=true" index="1-1">Space Edit</el-menu-item>

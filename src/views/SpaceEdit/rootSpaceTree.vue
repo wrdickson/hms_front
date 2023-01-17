@@ -41,7 +41,7 @@ export default {
         _.forEach(arr, (rootSpace) => {
             let obj = {
               id: rootSpace.id,
-              label: rootSpace.title + ' ( ' + rootSpace.displayOrder + ' | ' + rootSpace.showChildren + ' )',
+              label: rootSpace.title + ' (' + rootSpace.displayOrder + ' | ' + rootSpace.showChildren + ' )',
               children: getRootSpaceChildren(rootSpace.id)
             }
             returnArr.push(obj)
@@ -55,7 +55,7 @@ export default {
         if(rootSpace.childOf == 0) {
           let iObj = {
             id: rootSpace.id,
-            label: rootSpace.title + ' ( ' + rootSpace.displayOrder + ' | ' + rootSpace.showChildren + ' )',
+            label: rootSpace.title + ' (' + rootSpace.displayOrder + ' | ' + rootSpace.showChildren + ' )',
             children: getRootSpaceChildren(rootSpace.id)
           }
           tArr.push(iObj)

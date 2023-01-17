@@ -520,8 +520,6 @@ export default {
     display: none !important;
   }
 
-
-
   .splitpanes--vertical > .splitpanes__splitter {
   min-width: 10px;
   background:  #3375b9

@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const rootSpaces = {
 
-  createRootSpace: ( token, beds, childOf, displayOrder, people, showChildren, spaceType, title ) => {
+  createRootSpace: ( token, beds, childOf, displayOrder, people, showChildren, spaceType, title, isActive ) => {
     const promise = axios({
       method: 'post',
       headers: {
@@ -15,9 +15,24 @@ const rootSpaces = {
         people: people,
         showChildren: showChildren,
         spaceType: spaceType,
-        title: title
+        title: title,
+        isActive: isActive
       },
       url: 'api/root-spaces-create'
+    })
+    return promise
+  },
+
+  deleteRootSpace: ( token, rootSpaceId ) => {
+    const promise = axios({
+      method: 'post',
+      headers: {
+        Jwt: token
+      },
+      data: {
+        root_space_id: rootSpaceId
+      },
+      url: 'api/root-spaces-delete'
     })
     return promise
   },
@@ -34,6 +49,9 @@ const rootSpaces = {
   },
 
   updateRootSpace( token, updateSpace ) {
+    //  childOf and showChildren are strings, convert to int
+    updateSpace.isActive = parseInt(updateSpace.isActive)
+    updateSpace.showChildren = parseInt(updateSpace.showChildren)
     const promise = axios({
       method: 'post',
       headers: {
@@ -43,7 +61,7 @@ const rootSpaces = {
       data: {
         updateSpace
       },
-      url: 'api/root-spaces/update'
+      url: 'api/root-spaces/update/' + updateSpace.id
     })
     return promise
   }

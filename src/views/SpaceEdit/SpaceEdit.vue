@@ -36,11 +36,15 @@
 
 <script>
 import { accountStore } from '/src/stores/account.js'
+import { rootSpacesStore } from '/src/stores/rootSpaces.js'
+import { resViewStore } from '/src/stores/resView.js'
 import _ from 'lodash'
 import api from '/src/api/api.js'
 import RootSpaceTree from '/src/views/SpaceEdit/rootSpaceTree.vue'
 import editRootSpace from '/src/views/SpaceEdit/editRootSpace.vue'
 import createRootSpace from '/src/views/SpaceEdit/createRootSpace.vue'
+import { ElMessage } from 'element-plus'
+
 export default {
     name: 'SpaceEdit',
     components: { editRootSpace, RootSpaceTree, createRootSpace },
@@ -53,6 +57,9 @@ export default {
       };
     },
     computed: {
+        $i18ErrorNoAction () { return this.$i18n.t('message.errorNoAction') },
+        $i18SpaceCreated () { return this.$i18n.t('message.spaceCreated') },
+        $i18SpaceDeleted () { return this.$i18n.t('message.spaceDeleted') },
         token() {
             return accountStore().token;
         },
@@ -71,24 +78,46 @@ export default {
             const showChildren = obj.showChildren
             const spaceType = obj.spaceType
             const title = obj.title
-            api.rootSpaces.createRootSpace( this.token, beds, childOf, displayOrder, people, showChildren, spaceType, title ).then( (response) => {
+            const isActive = obj.isActive
+            api.rootSpaces.createRootSpace( this.token, beds, childOf, displayOrder, people, showChildren, spaceType, title, isActive ).then( (response) => {
               if(response.data.create > 0){
               const sorted = _.sortBy(response.data.root_spaces_children_parents, 'displayOrder')
               this.rootSpaces = sorted
+              //  update store
+              rootSpacesStore().setRootSpaces(sorted)
+              //  inform user
+              ElMessage({
+                type: 'success',
+                message: this.$i18SpaceCreated
+              })
               } else {
                 //error
-                alert('error')
+                ElMessage({
+                  type: 'error',
+                  mesage: this.$i18ErrorNoAction
+                })
               }
             })
         },
         deleteSpace ( space ) {
           console.log('d:', space )
-          api.engine.deleteSpace ( space.id, this.jwt ).then( (response) => {
+          api.rootSpaces.deleteRootSpace ( this.token, space.id ).then( (response) => {
             if(response.data.execute == true){
             const sorted = _.sortBy(response.data.root_spaces_children_parents, 'show_order')
             this.rootSpaces = sorted
+            //  tell resview that root spaces have changed
+            resViewStore().setShowHideRootSpaceCopy(null)
+            //  update the store
+            rootSpacesStore().setRootSpaces(sorted)
+            ElMessage({
+              type: 'success',
+              message: this.$i18SpaceDeleted
+            })
             } else {
-              //error
+              ElMessage({
+                type: 'error',
+                message: this.$i18ErrorNoAction
+              })
             }
           })
         },
@@ -102,8 +131,12 @@ export default {
           console.log('uSpace on parent', uSpace)
           api.rootSpaces.updateRootSpace( this.token, uSpace ).then( (response) => {
             console.log(response.data)
-            //const sorted = _.sortBy(response.data.root_spaces_children_parents, 'displayOrder')
-            //this.rootSpaces = sorted
+            const sorted = _.sortBy(response.data.root_spaces_children_parents, 'displayOrder')
+            this.rootSpaces = sorted
+            //update the store
+            //nuke the show/hide copy that is used by resview
+            resViewStore().setShowHideRootSpaceCopy(null)
+            rootSpacesStore().setRootSpaces(sorted)
           })
         }
     },

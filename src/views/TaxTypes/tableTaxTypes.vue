@@ -17,7 +17,6 @@
     <el-table-column prop="is_current" label="Is Current" width="80"></el-table-column>
     <el-table-column prop="display_order" label="Display Order" width="150"></el-table-column>
 
-
   </el-table>
 </template>
 
@@ -26,11 +25,13 @@
   import { accountStore } from '/src/stores/account.js'
   export default {
     name: "TableTaxTypes",
+    emits: ['tableTaxTypes:taxTypeSelected'],
     data () {
       return {
         cellStyle: {
           padding: '5px'
         },
+        selctedTaxType: {},
         taxTypes: [],
         tstriped: true
       }
@@ -42,12 +43,13 @@
     },
     methods: {
       rowSelected ( e ) {
-        console.log(e)
+        console.log('selected')
+        //  this is where we remove the reactivity
+        this.$emit('tableTaxTypes:taxTypeSelected', {...e} )
       }
     },
     mounted () {
       api.taxTypes.getTaxTypes( this.token ).then( response => {
-        console.log(response)
         this.taxTypes = response.data.all_tax_types
       })
     }
@@ -55,13 +57,6 @@
 </script>
 
 <style>
-.tax-table-header-row .cell {
-   
-  
-}
-.tax-table-header-row th {
-
-}
 
 .tax-table-header-row {
   background-color: #333 !important;

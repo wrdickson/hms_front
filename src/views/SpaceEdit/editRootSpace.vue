@@ -15,6 +15,12 @@
         <el-form-item :label="i18Title">
           <el-input v-model="selectedSpaceCopy.title"></el-input>
         </el-form-item>
+        <el-form-item :label="i18IsActive">
+          <el-select v-model="selectedSpaceCopy.isActive" placeholder="Select">
+            <el-option :label="i18True" value="1"/>
+            <el-option :label="i18False" value="0"/>
+          </el-select>
+        </el-form-item>
         <el-form-item :label="i18ChildOf">
           <el-select v-model="selectedSpaceCopy.childOf" placeholder="Select">
             <el-option label="0" value="0"></el-option>
@@ -91,9 +97,12 @@ export default {
         childOf: this.selectedSpace.childOf,
         children: this.selectedSpace.children,
         displayOrder: this.selectedSpace.displayOrder,
+        //  cast to string to make the bound element-ui select show "true" "false" not 1, 0
+        isActive: this.selectedSpace.isActive.toString(),
         parents: this.selectedSpace.parents,
         people: this.selectedSpace.people,
-        showChildren: this.selectedSpace.showChildren,
+        //  cast to string to make the bound element-ui select show "true" "false" not 1, 0
+        showChildren: this.selectedSpace.showChildren.toString(),
         title: this.selectedSpace.title,
         spaceType: this.selectedSpace.spaceType,
 
@@ -116,7 +125,8 @@ export default {
     i18True () { return this.$i18n.t('message.true') },
     i18Title () { return this.$i18n.t('message.title') },
     i18Type () { return this.$i18n.t('message.type') },
-    i18Yes () { return this.$i18n.t('message.yes') }
+    i18Yes () { return this.$i18n.t('message.yes') },
+    i18IsActive () { return this.$i18n.t('message.isActive') }
   },
   methods: {
     deleteSpace () {

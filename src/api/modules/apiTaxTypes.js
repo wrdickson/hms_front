@@ -3,7 +3,7 @@ import axios from 'axios'
 const taxTypes = {
 
   getTaxTypes: ( token ) => {
-    const request = axios({
+    const promise = axios({
       method: 'post',
       headers: {
         'Jwt': token
@@ -13,7 +13,20 @@ const taxTypes = {
       },
       url: 'api/tax-types/get-all/'
     })
-    return request
+    return promise
+  },
+  updateTaxType: ( token, obj ) => {
+    const promise = axios({
+      method: 'post',
+      headers: {
+        'Jwt': token
+      },
+      data: {
+        uObj: obj
+      },
+      url: 'api/tax-type-update/'
+    })
+    return promise
   }
 
 }
