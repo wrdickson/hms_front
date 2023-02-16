@@ -16,8 +16,8 @@
   -->
   
   <div v-if="rootSpaces">
-
-    <!--  CUSTOMER SELECT AND CREATE -->
+  
+    <!--  CUSTOMER SELECT AND CREATE 
     <hr/>
     <div>
       Customer: {{ cCustomerFirst}}&nbsp{{cCustomerLast}}
@@ -41,7 +41,7 @@
       @createCustomer:customerCreated="createCustomerSelected">
     </CreateCustomer>
     <hr/>
-
+    -->
     <el-config-provider :locale="locale">
       <el-form
         label-width="70px"
@@ -86,6 +86,28 @@
               </template>
             </el-select>
           </el-form-item>
+
+          <el-form-item
+            v-if="isAssigned"
+          >
+            <el-button
+            >
+              {{notAssignedTxt}}
+            </el-button>
+          </el-form-item>
+
+          <el-form-item :label="spaceTypeLabel">
+            <el-select
+              v-if="1"
+              v-model="cSpaceTypePref"
+            >
+              <template v-for="spaceType in spaceTypes">
+                <el-option :label="spaceType.title" :value="spaceType.id"></el-option>
+
+              </template>
+            </el-select>
+          
+          </el-form-item>
         
 
 
@@ -107,6 +129,7 @@ import dajs from 'dayjs'
 import { accountStore } from '/src/stores/account.js'
 import { localeStore } from '/src/stores/locale.js'
 import { rootSpacesStore } from '/src/stores/rootSpaces.js'
+import { spaceTypesStore } from '/src/stores/spaceTypes.js'
 import SearchCustomers from '/src/components/searchCustomers.vue'
 import CreateCustomer from '/src/components/createCustomer.vue'
 
@@ -115,7 +138,7 @@ import _ from 'lodash'
 
 export default {
   name: 'EditReservation',
-  props: ['componentKey', 'resId', 'checkin', 'checkout', 'people', 'beds', 'spaceId', 'customer', 'customerFirst', 'customerLast' ],
+  props: ['componentKey', 'resId', 'checkin', 'checkout', 'people', 'beds', 'isAssigned', 'spaceTypePref', 'spaceId', 'customer', 'customerFirst', 'customerLast' ],
   emits: [ 'edit-reservation:modify-reservation-1' ],
   components: {
     SearchCustomers,
@@ -124,13 +147,16 @@ export default {
   data () {
     return {
       //  we create these values with the initial props
-      //  when the props change, thes values will NOT
+      //  because we don't mutate props, we mutate a copy of the props.
+      //  when the props change, these values should reload
       //  that's why we have watchers on them below
       cResId: this.resId,
       cCheckin: this.checkin,
       cCheckout: this.checkout,
       cPeople: this.people,
       cBeds: this.beds,
+      cIsAssigned: this.isAssigned,
+      cSpaceTypePref: this.spaceTypePref,
       cSpaceId: this.spaceId,
       cCustomer: this.customer,
       cCustomerFirst: this.customerFirst,
@@ -150,6 +176,7 @@ export default {
       showSearchCustomers: false,
 
       selectedSpace: '',
+
 
       bedsSelectArr: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
       peopleSelectArr: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
@@ -190,6 +217,12 @@ export default {
     locale () {
       return localeStore().selectedLocale
     },
+    notAssignedTxt () {
+      return this.$t('message.notAssigned')
+    },
+    spaceTypes () {
+      return spaceTypesStore().spaceTypes
+    },
     token () {
       return accountStore().token
     },
@@ -215,6 +248,10 @@ export default {
     spacePickerLabel () {
       return this.$t('message.spaceLabel')
     },
+    spaceTypeLabel () {
+      return this.$t('message.spaceType')
+    }
+
   },
   methods: {
 
@@ -330,6 +367,12 @@ export default {
     },
     beds ( i ) {
       this.cBeds = i
+    },
+    isAssigned ( i ) {
+      this.cIsAssigned = i
+    },
+    spaceTypePref ( i ) {
+      this.cSpaceTypePref = i
     },
     spaceId ( i ) {
       this.cSpaceId = i

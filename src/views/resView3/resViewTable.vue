@@ -55,6 +55,10 @@
             :startTruncated="scope.row[day.dayString + 'starttruncated']"
             :endTruncated="scope.row[day.dayString + 'endtruncated']"
           />
+          <unassignedBlock
+            v-if="scope.row[day.dayString + 'unassigned']"
+            :unassignedResArr="scope.row[day.dayString + 'unassigned']"
+          />
         </div>
       </template>
       </el-table-column>
@@ -66,13 +70,14 @@
 <script lang="js">
 import resBlock from './resBlock.vue'
 import emptyBlock from './emptyBlock.vue'
+import unassignedBlock from './unassignedBlock.vue'
 import { resViewStore } from '/src/stores/resView.js'
 import c1 from './C1.vue'
 import dayjs from 'dayjs'
 import _ from 'lodash'
 export default {
   name: 'ResViewTable',
-  components: { c1, resBlock, emptyBlock },
+  components: { c1, resBlock, emptyBlock, unassignedBlock },
   emits: [ 'resview-toggle-show-children', 'resBlockClick', 'emptyBlockClick', 'emptyCellClick' ],
   props: [
     'tDateArray',

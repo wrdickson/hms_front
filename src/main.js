@@ -19,6 +19,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 /* treeshake specific icons */
 import {
+  faArrowDown,
   faBars,
   faCircleArrowRight,
   faChevronRight,
@@ -29,6 +30,7 @@ import {
 
 /* add icons to the library */
 library.add(
+  faArrowDown,
   faBars,
   faChevronRight,
   faChevronDown,

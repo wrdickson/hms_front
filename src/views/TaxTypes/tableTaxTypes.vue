@@ -4,7 +4,7 @@
     :data="taxTypes" 
     stripe
     highlight-current-row
-    height="200"
+    height="500"
     size="small"
     style="width: 100%"
     cell-class-name="t-table-cell"
@@ -20,11 +20,12 @@
   </el-table>
 </template>
 
-<script>
+<script lang="js">
   import api from '/src/api/api.js'
   import { accountStore } from '/src/stores/account.js'
   export default {
     name: "TableTaxTypes",
+    props: [ 'reloadTrigger' ],
     emits: ['tableTaxTypes:taxTypeSelected'],
     data () {
       return {
@@ -42,16 +43,23 @@
       }
     },
     methods: {
-      rowSelected ( e ) {
+      rowSelected ( o ) {
         console.log('selected')
         //  this is where we remove the reactivity
-        this.$emit('tableTaxTypes:taxTypeSelected', {...e} )
+        this.$emit('tableTaxTypes:taxTypeSelected', {...o} )
       }
     },
     mounted () {
       api.taxTypes.getTaxTypes( this.token ).then( response => {
         this.taxTypes = response.data.all_tax_types
       })
+    },
+    watch: {
+      reloadTrigger ( oldVal, newVal ) {
+        api.taxTypes.getTaxTypes( this.token ).then( response => {
+        this.taxTypes = response.data.all_tax_types
+      })
+      }
     }
   }
 </script>

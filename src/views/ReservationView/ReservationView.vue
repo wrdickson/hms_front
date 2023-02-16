@@ -45,6 +45,8 @@
           :checkout="selectedReservation.checkout"
           :people="selectedReservation.people"
           :beds="selectedReservation.beds"
+          :isAssigned="selectedReservation.is_assigned"
+          :spaceTypePref="selectedReservation.space_type_pref"
           :spaceId="selectedReservation.space_id"
           :customer="selectedReservation.customer"
           :customerFirst="selectedReservation.first_name"

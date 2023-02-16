@@ -47,6 +47,7 @@ import { saleTypeGroupsStore } from './stores/saleTypeGroups.js'
 import { taxTypesStore } from './stores/taxTypes.js'
 import { rootSpacesStore } from './stores/rootSpaces.js'
 import { paymentTypesStore } from './stores/paymentTypes.js'
+import { spaceTypesStore } from './stores/spaceTypes.js'
 import api from './api/api.js'
 import MainMenu from './components/mainMenu.vue'
 import userMenu from './components/userMenu.vue'
@@ -66,6 +67,7 @@ export default {
       rootSpaces: null,
       saleTypes: null,
       saleTypeGropus: null,
+      spaceTypes: null,
       taxTypes: null
     }
   },
@@ -108,6 +110,12 @@ export default {
         this.saleTypeGroups = response.data.all_sale_type_groups
       })
 
+      //  space types
+      api.spaceTypes.getSpaceTypes().then ( response => {
+        spaceTypesStore().setSpaceTypes( response.data.space_types )
+        this.spaceTypes = response.data.space_types
+      })
+
       // tax types
       api.taxTypes.getTaxTypes( this.token ).then( response => {
         //  set the store
@@ -143,13 +151,13 @@ export default {
       }).catch( err => {
         accountStore().setAccountToGuest()
         this.authCompleted = true
-        this.loadInitialData
+        this.loadInitialData()
         this.$router.push('/Login')
       })
     } else {
       accountStore().setAccountToGuest()
       this.authCompleted = true
-      this.loadInitialData
+      this.loadInitialData()
       this.$router.push('/Login')
     }
   }

@@ -160,7 +160,6 @@ export default {
         })
       })
 
-
       /**
        * this is where we generate a properly formatted piece of data
        * to hand to resViewTable, which will
@@ -316,6 +315,26 @@ export default {
               }
             })
           }
+          //  handle unassigned reservations
+          if(iReservation.is_assigned == 0) {
+            console.log('iReservation @ handle unaddisned')
+            console.table(iReservation)
+            let iDate = dayjs(iReservation.checkin).format('YYYYMMDD')
+            let sKey = 'D' + iDate + 'unassigned'
+            let qRecord = _.find(spaceRecords, (o) => {
+                //  this is the id of the root space for 'unassigned'
+                return o.id == 90
+            })
+            if(qRecord) {
+              if(!qRecord[sKey]){
+                
+                qRecord[sKey] = [{...iReservation}]
+              } else {
+                qRecord[sKey].push(iReservation)
+              }
+            }
+          }
+
         }
       })
       

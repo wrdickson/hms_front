@@ -7,9 +7,6 @@
       :rules="rules"
       ref="taxFormRef"
     >
-      <el-form-item label="rVal" prop="rVal">
-        <el-input v-model="eTaxType.rVal"/>
-      </el-form-item>
       <el-form-item :label="i18nTaxTitle" prop="tax_title">
         <el-input v-model="eTaxType.tax_title"/>
       </el-form-item>
@@ -27,11 +24,18 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="close">{{ i18nClose }}</el-button>
-      </el-form-item>
-      <el-form-item>
         <el-button type="success" @click="updateTaxType('taxFormRef')">{{ i18nUpdateTaxType }}</el-button>
       </el-form-item>
     </el-form>
+    <hr/>
+    <el-popconfirm
+      title="Are you sure to delete this?"
+      @confirm="deleteTaxType"
+    >
+      <template #reference>
+        <el-button type="danger">Delete</el-button>
+      </template>
+    </el-popconfirm>
   </div>
 </template>
 
@@ -41,21 +45,24 @@
   export default {
     name: 'EditTaxTypes',
     props: ['selectedTaxType'],
-    emits: ['editTaxType-close', 'editTaxType-update'],
+    emits: ['editTaxType-close', 'editTaxType-update', 'editTaxType:delete'],
     data () {
       return {
         eTaxType: null,
         rules: {
           tax_title: [
-            { min: 4, max: 24, message: '4 to 24', 'trigger': 'change' }
+            { required: true, message: 'Tax title is required', trigger: 'change' },
+            { min: 4, max: 24, message: '4 to 24', trigger: 'change' }
           ],
-          tax_rate: [],
-          display_order: [],
-          // this.checkRVal (function) needs to be declared in component methods
-          rVal: [
-            { validator: this.checkRVal, trigger: 'change' },
-            { validator: this.isSarbo, trigger: 'change' }
-          ]
+          tax_rate: [
+            { required: true, message: 'Tax rate is required'},
+            { validator: this.isFloat, trigger: 'change' }
+          ],
+          display_order: [
+          { required: true, message: 'Display order title is required', trigger: 'change'},
+          { validator: this.isInteger, message: 'Display order must be a number', trigger: 'change' },
+          { validator: this.isGreaterThan1, message: 'Display order must be at least 1', trigger: 'change' }
+          ],
         }
       }
     },
@@ -75,6 +82,10 @@
       close () {
         this.$emit('editTaxType-close')
       },
+      deleteTaxType () {
+        console.log('del')
+        this.$emit('editTaxType:delete', {...this.eTaxType})
+      },
       updateTaxType (taxFormRef) {
         this.$refs[taxFormRef].validate( (valid) => {
           if(valid) {
@@ -84,30 +95,29 @@
           }
         })
       },
-
-
-
-      checkRVal ( rule, value, callback ) {
-        console.log('rule: ', rule)
-        console.log('executed')
-        if (value === '') {
-          callback(new Error('Must have length, muthafucka'))
+      isFloat ( rule, value, callback ) {
+        console.log('pf', Number(value) )
+        if( isNaN(Number(value) )) {
+          callback(new Error('must be a float'))
         } else {
           callback()
         }
       },
-
-      isSarbo ( rule, value, callback ) {
-        console.log('isSarbo')
-        if ( value != 'Sarbo' ) {
-          callback( new Error('Must be sarbo, butch'))
+      isGreaterThan1 ( rule, value, callback ) {
+      if( parseInt(value) < 1 ) {
+        callback( new Error( 'must be greater than 0' ))
+      } else {
+        callback()
+      }
+      },
+      isInteger ( rule, value, callback ) {
+        const pattern = /^[0-9]*$/
+        if( pattern.test(value) == false ) {
+          callback( new Error('must be numbers') )
         } else {
           callback()
         }
       }
- 
-      
-
     },
     created () {
 

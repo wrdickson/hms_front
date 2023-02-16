@@ -2,6 +2,30 @@ import axios from 'axios'
 
 const taxTypes = {
 
+  createTaxType ( token, obj ) {
+    const promise = axios({
+      method: 'post',
+      headers: {
+        'Jwt': token
+      },
+      data: obj,
+      url: 'api/tax-types-create/'
+    })
+    return promise
+  },
+
+  deleteTaxType ( token, obj ) {
+    const promise = axios({
+      method: 'post',
+      headers: {
+        'Jwt': token
+      },
+      data: obj,
+      url: 'api/tax-types-delete/'
+    })
+    return promise
+  },
+
   getTaxTypes: ( token ) => {
     const promise = axios({
       method: 'post',
