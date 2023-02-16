@@ -8,27 +8,27 @@
 
 </template>
 
-<script>
-import { ElMessage } from 'element-plus'
-export default {
-  name: "c1",
-  props:[ 'spaceId', 'showChildren', 'children'],
-  emits: [ 'c1-toggle-show-children' ],
-  computed: {
-    hasChildren () {
-      if( this.children.length > 0){
-        return true
-      } else { return false }
-    }
-  },
-  methods: {
-    divClick (e) {
-      console.log('divClick', this.spaceId)
-      this.$emit( 'c1-toggle-show-children', this.spaceId )
-      return false
+<script lang="js">
+  import { ElMessage } from 'element-plus'
+  export default {
+    name: "c1",
+    props:[ 'spaceId', 'showChildren', 'children'],
+    emits: [ 'c1-toggle-show-children' ],
+    computed: {
+      hasChildren () {
+        if( this.children.length > 0){
+          return true
+        } else { return false }
+      }
+    },
+    methods: {
+      divClick (e) {
+        console.log('divClick', this.spaceId)
+        this.$emit( 'c1-toggle-show-children', this.spaceId )
+        return false
+      }
     }
   }
-}
 </script>
 
 <style scoped>

@@ -56,6 +56,7 @@
             :endTruncated="scope.row[day.dayString + 'endtruncated']"
           />
           <unassignedBlock
+            @unassigned-block-select-res="unassignedResSelect"
             v-if="scope.row[day.dayString + 'unassigned']"
             :unassignedResArr="scope.row[day.dayString + 'unassigned']"
           />
@@ -78,7 +79,7 @@ import _ from 'lodash'
 export default {
   name: 'ResViewTable',
   components: { c1, resBlock, emptyBlock, unassignedBlock },
-  emits: [ 'resview-toggle-show-children', 'resBlockClick', 'emptyBlockClick', 'emptyCellClick' ],
+  emits: [ 'resview-toggle-show-children', 'resBlockClick', 'emptyBlockClick', 'emptyCellClick', 'unassigned-res-selected' ],
   props: [
     'tDateArray',
     'tableData',
@@ -172,6 +173,11 @@ export default {
           return 'display: none;'
         }
       }
+    },
+    unassignedResSelect ( resId ) {
+      //console.log('resId @ resViewTable', resId)
+      // pass the event to parent (resView3)
+      this.$emit('unassigned-res-selected', resId)
     }
   },
   mounted () {

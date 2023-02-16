@@ -10,7 +10,7 @@
       :componentKey="componentKey"
     ></FolioView>
   </el-dialog>
-  <div v-if="rootSpaces && rootSpace" class="wrapper">
+  <div v-if="rootSpaces" class="wrapper">
     <div><font-awesome-icon @click="closeReservationView" color="#f56c6c" icon="fa-window-close" size="xl" style="float: right;"/></div><br/>
     <div>{{ selectedReservation.customer_first }}&nbsp{{ this.selectedReservation.customer_last }}</div>
     <div>
@@ -18,7 +18,7 @@
       <span> : </span>
       <span>{{ selectedReservation.checkout }}</span>
     </div>
-    <div>{{ $t('message.spaceLabel') }}: {{ rootSpace.title }}</div>
+    <div v-if="rootSpace">{{ $t('message.spaceLabel') }}: {{ rootSpace.title }}</div>
     <div>{{ $t('message.people') }}: {{ selectedReservation.people }}</div>
     <div>{{ $t('message.beds') }}: {{ selectedReservation.beds }}</div>
     <div>Res Id : {{ selectedReservation.id }}</div>
@@ -36,7 +36,7 @@
     <el-collapse>
       <el-collapse-item title="Edit Reservation" name="2">
         <EditReservation
-          v-if="rootSpaces && rootSpace"
+          v-if="rootSpaces"
           
           :componentKey="componentKey"
 
@@ -71,91 +71,71 @@
  </div>
 </template>
 
-<script>
-import EditReservation from '/src/views/ReservationView/editReservation.vue'
-import FolioView from '/src/views/FolioView/FolioView.vue'
-import api from '/src/api/api.js'
-import _ from 'lodash'
-import { accountStore } from '/src/stores/account.js'
-import { resViewStore } from '/src/stores/resView.js'
-import { rootSpacesStore } from '/src/stores/rootSpaces.js'
-import { ElMessage } from 'element-plus'
-import useHandleRequestError from '/src/composables/useHandleRequestError.js'
-export default {
-  setup () {
-      //  import composable function for request error handling
-      const { handleRequestError } = useHandleRequestError()
-      return { handleRequestError }
-  },
-  name: 'ReservationView',
-  props: [ 
-    'selectedReservation'
-  ],
-  components: { EditReservation, FolioView },
+<script lang="js">
+  import EditReservation from '/src/views/ReservationView/editReservation.vue'
+  import FolioView from '/src/views/FolioView/FolioView.vue'
+  import api from '/src/api/api.js'
+  import _ from 'lodash'
+  import { accountStore } from '/src/stores/account.js'
+  import { resViewStore } from '/src/stores/resView.js'
+  import { rootSpacesStore } from '/src/stores/rootSpaces.js'
+  import { ElMessage } from 'element-plus'
+  import useHandleRequestError from '/src/composables/useHandleRequestError.js'
+  export default {
+    setup () {
+        //  import composable function for request error handling
+        const { handleRequestError } = useHandleRequestError()
+        return { handleRequestError }
+    },
+    name: 'ReservationView',
+    props: [ 
+      'selectedReservation'
+    ],
+    components: { EditReservation, FolioView },
 
-  emits: [ 
-    'reservation-view:close-view',
-    'reservation-view:update-reservations',
-    'reservation-view:update-selected-reservation'
-  ],
-  data () {
-    return {
-      componentKey: 1,
-      rootSpaces: null,
-      showHistory: false,
-      showFolioDialog: false
-    }
-  },
-  computed: {
-    token () {
-      return accountStore().token
+    emits: [ 
+      'reservation-view:close-view',
+      'reservation-view:update-reservations',
+      'reservation-view:update-selected-reservation'
+    ],
+    data () {
+      return {
+        componentKey: 1,
+        rootSpaces: null,
+        showHistory: false,
+        showFolioDialog: false
+      }
     },
-    rootSpace () {
-      const rs = _.find( this.rootSpaces, o => {
-        return o.id == this.selectedReservation.space_id
-      })
-      return rs
-    }
-  },
-  methods: {
-    closeReservationView () {
-      this.$emit('reservation-view:close-view')
+    computed: {
+      token () {
+        return accountStore().token
+      },
+      rootSpace () {
+        const rs = _.find( this.rootSpaces, o => {
+          return o.id == this.selectedReservation.space_id
+        })
+        return rs
+      }
     },
-    modifyReservation1 ( args ) {
-      console.log('reservationview gets command', args)
-      api.reservations.modifyReservation1( args, this.token ).then( response => {
-        if( response.data.success = true ) {
-          //  tell parent (resView3) to reload reservations
-          this.$emit('reservation-view:update-reservations')
-          //  tell the parent (resView3) to update selected reservation
-          //  this will iterate down the event chain and update here
-          //  and on editReservation
-          this.$emit('reservation-view:update-selected-reservation', response.data.current_res )
-          //  increment the componentKey prop to signal we need to clean up
-          this.componentKey += 1
-          ElMessage({
-            type: 'success',
-            message: 'Reservation updated'
-          })
-        } else {
-          ElMessage({
-            type: 'warning',
-            message: 'There was an error'
-          })
-        }
-      }).catch( error => {
-        this.handleRequestError( error )
-      })
-    },
-    reservationCheckin () {
-      api.reservations.reservationCheckin ( this.selectedReservation.id, this.token ).then(
-        response => {
-          if( response.data.checkin == true && response.data.reservation_after_checkin) {
+    methods: {
+      closeReservationView () {
+        this.$emit('reservation-view:close-view')
+      },
+      modifyReservation1 ( args ) {
+        console.log('reservationview gets command', args)
+        api.reservations.modifyReservation1( args, this.token ).then( response => {
+          if( response.data.success = true ) {
+            //  tell parent (resView3) to reload reservations
             this.$emit('reservation-view:update-reservations')
-            this.$emit('reservation-view:update-selected-reservation', response.data.reservation_after_checkin )
+            //  tell the parent (resView3) to update selected reservation
+            //  this will iterate down the event chain and update here
+            //  and on editReservation
+            this.$emit('reservation-view:update-selected-reservation', response.data.current_res )
+            //  increment the componentKey prop to signal we need to clean up
+            this.componentKey += 1
             ElMessage({
               type: 'success',
-              message: 'Reservation checked in'
+              message: 'Reservation updated'
             })
           } else {
             ElMessage({
@@ -163,36 +143,56 @@ export default {
               message: 'There was an error'
             })
           }
-      }).catch( error => {
-        this.handleRequestError( error )
-      })
+        }).catch( error => {
+          this.handleRequestError( error )
+        })
+      },
+      reservationCheckin () {
+        api.reservations.reservationCheckin ( this.selectedReservation.id, this.token ).then(
+          response => {
+            if( response.data.checkin == true && response.data.reservation_after_checkin) {
+              this.$emit('reservation-view:update-reservations')
+              this.$emit('reservation-view:update-selected-reservation', response.data.reservation_after_checkin )
+              ElMessage({
+                type: 'success',
+                message: 'Reservation checked in'
+              })
+            } else {
+              ElMessage({
+                type: 'warning',
+                message: 'There was an error'
+              })
+            }
+        }).catch( error => {
+          this.handleRequestError( error )
+        })
+      },
+      reservationCheckout () {
+        api.reservations.reservationCheckout ( this.selectedReservation.id, this.token ).then(
+          response => {
+            console.log(response)
+            if( response.data.checkout == true && response.data.reservation_after_checkout) {
+              this.$emit('reservation-view:update-reservations')
+              this.$emit('reservation-view:update-selected-reservation', response.data.reservation_after_checkout )
+              ElMessage({
+                type: 'success',
+                message: 'Reservatin checked out'
+              })
+            }
+        }).catch( error => {
+          this.handleRequestError( error )
+        })
+      }
     },
-    reservationCheckout () {
-      api.reservations.reservationCheckout ( this.selectedReservation.id, this.token ).then(
-        response => {
-          console.log(response)
-          if( response.data.checkout == true && response.data.reservation_after_checkout) {
-            this.$emit('reservation-view:update-reservations')
-            this.$emit('reservation-view:update-selected-reservation', response.data.reservation_after_checkout )
-            ElMessage({
-              type: 'success',
-              message: 'Reservatin checked out'
-            })
-          }
-      }).catch( error => {
-        this.handleRequestError( error )
-      })
-    }
-  },
-  mounted () {
-    //  get rootSpaces . . . 
-    if( resViewStore().showHideRootSpaceCopy ) {
-      this.rootSpaces = resViewStore().showHideRootSpaceCopy
-    } else { 
-      this.rootSpaces = rootSpacesStore().rootSpaces
+    mounted () {
+      //  get rootSpaces . . . 
+      if( resViewStore().showHideRootSpaceCopy ) {
+        this.rootSpaces = resViewStore().showHideRootSpaceCopy
+      } else { 
+        this.rootSpaces = rootSpacesStore().rootSpaces
+      }
     }
   }
-}
 
 </script>
 

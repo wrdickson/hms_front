@@ -27,7 +27,7 @@
 export default {
   props: [ 'unassignedResArr' ],
   name: 'unassignedBlock',
-  emits: [ 'unassigned-block-click' ],
+  emits: [ 'unassigned-block-select-res' ],
   computed: {
     resQuantity () {
       return this.unassignedResArr.length.toString()
@@ -40,8 +40,8 @@ export default {
   },
   methods: {
     unassignedResSelect (id) {
-      console.log('unassignedBlockClick @emptyBlock', id)
-      //this.$emit('empty-block-click')
+      //console.log('unassignedBlockClick @unassigned block', id)
+      this.$emit('unassigned-block-select-res', id)
     }
   }
 }

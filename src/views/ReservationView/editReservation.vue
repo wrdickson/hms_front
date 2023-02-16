@@ -77,9 +77,11 @@
             />
           </el-form-item>
 
-          <el-form-item :label="spacePickerLabel">
+          <el-form-item :label="spacePickerLabel"
+            v-if="cIsAssigned"
+          >
             <el-select
-              v-if="this.rootSpaces && this.cSpaceId && this.availableSpaceIds" v-model="this.selectedSpace" :placeholder="placeholder"
+              v-if="this.rootSpaces && this.availableSpaceIds" v-model="this.selectedSpace" :placeholder="placeholder"
             >
               <template v-for="aSpace in this.availableSpaces">
                 <el-option :label="aSpace.title" :value="aSpace.id"></el-option>
@@ -87,18 +89,18 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item
-            v-if="isAssigned"
+          <el-form-item :label="labelAssigned"
+            
           >
-            <el-button
-            >
-              {{notAssignedTxt}}
-            </el-button>
+            <el-select v-model="cIsAssigned">
+              <el-option :label="labelTrue" :value="1"></el-option>
+              <el-option :label="labelFalse" :value="0"></el-option>
+            </el-select>
+
           </el-form-item>
 
-          <el-form-item :label="spaceTypeLabel">
+          <el-form-item v-if="!cIsAssigned" :label="spaceTypeLabel">
             <el-select
-              v-if="1"
               v-model="cSpaceTypePref"
             >
               <template v-for="spaceType in spaceTypes">
@@ -118,21 +120,18 @@
       <el-button @click="updateReservation" type="success" v-if="editReady">Save</el-button>
       <el-button @click="revertToProps" type="info">revert</el-button>
     </div>
-
   </div>
 
 </template>
 
 <script>
 import api from '/src/api/api.js'
-import dajs from 'dayjs'
 import { accountStore } from '/src/stores/account.js'
 import { localeStore } from '/src/stores/locale.js'
 import { rootSpacesStore } from '/src/stores/rootSpaces.js'
 import { spaceTypesStore } from '/src/stores/spaceTypes.js'
 import SearchCustomers from '/src/components/searchCustomers.vue'
 import CreateCustomer from '/src/components/createCustomer.vue'
-
 import dayjs from 'dayjs'
 import _ from 'lodash'
 
@@ -170,8 +169,6 @@ export default {
 
       availableSpaces: [],
       
-      rootSpaces: null,
-
       showCreateCustomer: false,
       showSearchCustomers: false,
 
@@ -207,18 +204,30 @@ export default {
       }
     },
     editReady () {
-      if( this.selectedSpace ){
+      if( this.selectedSpace || !this.cIsAssigned ){
         return true
       } else {
         return false
       }
     },
-
+    labelAssigned () {
+      return this.$t('message.assigned')
+    },
+    labelFalse () {
+      return this.$t('message.false')
+    },
+    labelTrue () {
+      return this.$t('message.true')
+    },
     locale () {
       return localeStore().selectedLocale
     },
     notAssignedTxt () {
       return this.$t('message.notAssigned')
+    },
+    rootSpaces () {
+      //  we do NOT want a reactive value here!!!
+      return {...rootSpacesStore().rootSpaces}
     },
     spaceTypes () {
       return spaceTypesStore().spaceTypes
@@ -271,13 +280,13 @@ export default {
           if( _.includes(this.availableSpaceIds, rootSpace.id) )
           arr.push(rootSpace)
         })
-        console.log('av Sp', arr)
+        //console.log('av Sp', arr)
         this.availableSpaces = arr
     },
     loadAvailableSpaceIds () {
       api.reservations.checkAvailabilityByDatesIgnoreRes(this.resId, this.cCheckinF, this.cCheckoutF, this.token).then(
         response => {
-          console.log(response)
+          //console.log(response)
           this.availableSpaceIds = response.data.availableSpaceIds
           this.loadAvailableSpaces()
           //  reset selected space
@@ -292,6 +301,8 @@ export default {
       this.cCustomer = this.customer
       this.cCustomerFirst = this.customerFirst
       this.cCustomerLast = this.customerLast
+      this.cSpaceTypePref = this.spaceTypePref
+      this.cIsAssigned = this.isAssigned
 
       this.selectedSpace = null
 
@@ -309,6 +320,18 @@ export default {
     },
     updateReservation () {
       /*
+      let updateSelectedSpace = null
+
+      //  handle data based on 'isAssigned'
+      if(!this.cIsAssigned){
+        updateSelectedSpace = 0
+      } else {
+        updateSelectedSpace = this.selectedSpace
+        //  set spaceTypePref to space selected value
+        //const iRootSpace = _.find(this.rootSpaces, o => {return o.id = this.selectedSpace})
+        //this.cSpaceTypePref = iRootSpace.spaceType
+      }
+
       console.log('customer', this.cCustomer)
       console.log('spaceId', this.selectedSpace )
       console.log('people', this.cPeople )
@@ -317,17 +340,38 @@ export default {
       console.log('checkout', this.cCheckoutF)
       console.log('customerFirst', this.cCustomerFirst)
       console.log('customerLast', this.cCustomerLast)
+      console.log('isAssigned', this.cIsAssigned)
+      console.log('spaceTypePref', this.cSpaceTypePref)
       */
+      let modSpaceSelected = null
+      if(!this.cIsAssigned){
+        modSpaceSelected = 0
+      } else {
+        modSpaceSelected = this.selectedSpace
+      }
+
+      //  if 
+      let modSpaceTypePref = null
+      if(modSpaceSelected){
+        modSpaceTypePref = 0
+      } else {
+        modSpaceTypePref = this.cSpaceTypePref
+      }
+
       const args = {
         res_id: this.cResId,
-        customer: this.cCustomer,
-        space_id: this.selectedSpace,    //  TODO validate params
+        space_id: modSpaceSelected,    //  TODO validate params
         people: this.cPeople,
         beds: this.cBeds,
+        isAssigned: this.cIsAssigned,
+        spaceTypePref: modSpaceTypePref,
         checkin: this.cCheckinF,
         checkout: this.cCheckoutF
       }
-      this.$emit('edit-reservation:modify-reservation-1', args)
+
+      console.log('args')
+      console.table(args)
+      //this.$emit('edit-reservation:modify-reservation-1', args)
 
     }
   },
@@ -339,7 +383,7 @@ export default {
           console.log(response)
           this.availableSpaceIds = response.data.availableSpaceIds
           //  get initial rootSpaces data
-          this.rootSpaces = rootSpacesStore().rootSpaces
+          //this.rootSpaces = rootSpacesStore().rootSpaces
           this.loadAvailableSpaces()
 
       })
@@ -393,8 +437,6 @@ export default {
       console.log('cDateRange change', newVal)
       this.loadAvailableSpaceIds()
     }
-
-
   }
 }
 </script>

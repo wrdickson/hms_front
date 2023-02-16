@@ -48,6 +48,7 @@
             @resBlockClick="reservationSelected"
             @resview-toggle-show-children="toggleShowChildren"
             @emptyCellClick="emptyCellClick"
+            @unassigned-res-selected="unassignedResSelected"
             :tDateArray="tDateArray"
             :tableData="resTableData"
             :trigger="trigger"
@@ -171,13 +172,15 @@ export default {
       //  iterate through the reservations and add data to the appropriate array item
       _.each(this.reservations, (iReservation) => {
         //  ignore reservations where checkout == resViewStartDate
-        if( iReservation.checkout == this.resViewStartDate ){
+        if( iReservation.checkout == this.resViewStartDate){
           //do nothing
         } else {
           let iRecord = _.find(spaceRecords, (o) => {
             //get the reservation
             return o.id == iReservation.space_id
           })
+          //  if there is no iRecord, it means the reservation is unassigned
+          //  ie spaceId is 0, so we do not proceed with this reservation (yet)
           if(iRecord){ 
             //  first present the reservation
 
@@ -246,7 +249,9 @@ export default {
           }
 
           //  now create 'empty block' records for children of reservations
-          if(iRecord.children.length > 0){
+          //  if there is no iRecord, it means the reservation is unassigned
+          //  ie spaceId is 0, so we do not proceed with this reservation (yet)
+          if(iRecord && iRecord.children.length > 0){
             _.forEach(iRecord.children, (childId) => {
               let qRecord = _.find(spaceRecords, (o) => {
                 return o.id == childId
@@ -282,7 +287,9 @@ export default {
           }
 
           //  now create 'empty block' records for parents of reservations
-          if(iRecord.parents.length > 0){
+          //  if there is no iRecord, it means the reservation is unassigned
+          //  ie spaceId is 0, so we do not proceed with this reservation (yet)
+          if(iRecord && iRecord.parents.length > 0){
             _.forEach(iRecord.parents, (parentId) => {
               let qRecord = _.find(spaceRecords, (o) => {
                 return o.id == parentId
@@ -291,7 +298,7 @@ export default {
                 //  iterate through the 'days'
                 //  calculate the difference between presentedResStart and checkout
                 let iDiff = dayjs(iReservation.checkout).diff(dayjs(pResStart), 'd')
-                // console.log('iDiff', iDiff)
+                //console.log('iDiff', iDiff)
                 //iterate through the 'days'
                 for( let i = 0; i < iDiff; i++){
                   // console.log('i', i)
@@ -315,9 +322,9 @@ export default {
               }
             })
           }
-          //  handle unassigned reservations
+          //  NOW, we handle unassigned reservations
           if(iReservation.is_assigned == 0) {
-            console.log('iReservation @ handle unaddisned')
+            console.log('iReservation @ handle unassigned')
             console.table(iReservation)
             let iDate = dayjs(iReservation.checkin).format('YYYYMMDD')
             let sKey = 'D' + iDate + 'unassigned'
@@ -328,14 +335,16 @@ export default {
             if(qRecord) {
               if(!qRecord[sKey]){
                 
-                qRecord[sKey] = [{...iReservation}]
+              qRecord[sKey] = [{...iReservation}]
               } else {
                 qRecord[sKey].push(iReservation)
               }
             }
           }
-
         }
+
+
+
       })
       
       return spaceRecords
@@ -402,9 +411,10 @@ export default {
       console.log(e)
     },
     reservationSelected ( resId ) {
-      this.selectedReservation = _.find(this.reservations, function(o){
+      const reactiveSelectedReservation = _.find(this.reservations, function(o){
         return o.id == resId
       })
+      this.selectedReservation = {...reactiveSelectedReservation}
       this.showCreateReservation = false
       this.showReservationView = true
     },
@@ -481,6 +491,16 @@ export default {
     },
     toggleCreateReservationDrawer () {
       this.showCreateReservationDrawer = !this.showCreateReservationDrawer
+    },
+    unassignedResSelected ( resId ) {
+      console.log('resId @ resview3', resId)
+      const reactiveSelectedReservation = _.find(this.reservations, function(o){
+        return o.id == resId
+      })
+      console.log('selRES @ res', reactiveSelectedReservation)
+      this.selectedReservation = {...reactiveSelectedReservation}
+      this.showCreateReservation = false
+      this.showReservationView = true
     },
     updateSelectedReservation ( newRes ) {
       this.selectedReservation = newRes
