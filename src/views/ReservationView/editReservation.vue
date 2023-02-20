@@ -89,30 +89,22 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item :label="labelAssigned"
-            
-          >
+          <el-form-item :label="labelAssigned">
             <el-select v-model="cIsAssigned">
               <el-option :label="labelTrue" :value="1"></el-option>
               <el-option :label="labelFalse" :value="0"></el-option>
             </el-select>
-
           </el-form-item>
 
-          <el-form-item v-if="!cIsAssigned" :label="spaceTypeLabel">
+          <el-form-item v-if="!cIsAssigned" :label="typeLabel">
             <el-select
               v-model="cSpaceTypePref"
             >
               <template v-for="spaceType in spaceTypes">
                 <el-option :label="spaceType.title" :value="spaceType.id"></el-option>
-
               </template>
             </el-select>
-          
           </el-form-item>
-        
-
-
         </el-form>
     </el-config-provider>
 
@@ -204,7 +196,7 @@ export default {
       }
     },
     editReady () {
-      if( this.selectedSpace || !this.cIsAssigned ){
+      if( this.selectedSpace ||  (!this.cIsAssigned  && this.cSpaceTypePref)  ){
         return true
       } else {
         return false
@@ -257,8 +249,8 @@ export default {
     spacePickerLabel () {
       return this.$t('message.spaceLabel')
     },
-    spaceTypeLabel () {
-      return this.$t('message.spaceType')
+    typeLabel () {
+      return this.$t('message.type')
     }
 
   },
@@ -331,7 +323,8 @@ export default {
         //const iRootSpace = _.find(this.rootSpaces, o => {return o.id = this.selectedSpace})
         //this.cSpaceTypePref = iRootSpace.spaceType
       }
-
+      */
+      console.log('THESE ARE current')
       console.log('customer', this.cCustomer)
       console.log('spaceId', this.selectedSpace )
       console.log('people', this.cPeople )
@@ -342,7 +335,7 @@ export default {
       console.log('customerLast', this.cCustomerLast)
       console.log('isAssigned', this.cIsAssigned)
       console.log('spaceTypePref', this.cSpaceTypePref)
-      */
+      
       let modSpaceSelected = null
       if(!this.cIsAssigned){
         modSpaceSelected = 0
@@ -363,15 +356,15 @@ export default {
         space_id: modSpaceSelected,    //  TODO validate params
         people: this.cPeople,
         beds: this.cBeds,
-        isAssigned: this.cIsAssigned,
-        spaceTypePref: modSpaceTypePref,
+        is_assigned: this.cIsAssigned,
+        space_type_pref: modSpaceTypePref,
         checkin: this.cCheckinF,
         checkout: this.cCheckoutF
       }
 
-      console.log('args')
+      console.log('this IS ARGS')
       console.table(args)
-      //this.$emit('edit-reservation:modify-reservation-1', args)
+      this.$emit('edit-reservation:modify-reservation-1', args)
 
     }
   },
@@ -436,6 +429,11 @@ export default {
     cDateRange ( newVal ) {
       console.log('cDateRange change', newVal)
       this.loadAvailableSpaceIds()
+    },
+    selectedSpace ( oldVal, newVal ) {
+      console.log('selectedSpace change', oldVal, newVal )
+      console.log('cDateRange @ selectedSpace change:')
+      console.table(this.cDateRange)
     }
   }
 }

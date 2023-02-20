@@ -122,9 +122,12 @@
         this.$emit('reservation-view:close-view')
       },
       modifyReservation1 ( args ) {
-        console.log('reservationview gets command', args)
+        //console.log('reservationview gets command')
+        //console.table( args )
         api.reservations.modifyReservation1( args, this.token ).then( response => {
-          if( response.data.success = true ) {
+          console.log('modifyReservation1:')
+          console.log(response.data)
+          if( response.data.success == true ) {
             //  tell parent (resView3) to reload reservations
             this.$emit('reservation-view:update-reservations')
             //  tell the parent (resView3) to update selected reservation

@@ -371,6 +371,30 @@ export default {
     }
   },
   methods: {
+    childrenHide ( k ) {
+      k.showChildren = 0
+      _.each(k.children, (childId) => {
+          console.log('childId', childId)
+          let m = _.find(this.rootSpaces, (o) => {
+            return o.id == childId
+          })
+          console.log('m', m)
+          if(m){
+            this.childrenHide(m)
+          }
+      })
+    },
+    childrenShow ( k ) {
+      k.showChildren = 1
+      _.each(k.children, (childId) => {
+          let m = _.find(this.rootSpaces, (o) => {
+                return o.id == childId
+          })
+          if(m){
+            //this.childrenShow(m)
+          }
+      })
+    },
     clearReservations () {
     },
     closeReservationView () {
@@ -441,6 +465,13 @@ export default {
       let k = _.find(this.rootSpaces, (o) => {
         return o.id == spaceId
       })
+      console.log('k @find')
+      if(!k.showChildren) {
+        this.childrenShow(k)
+      } else {
+        this.childrenHide(k)
+      }
+      /*
       let hideChildren = (k) => {
         k.showChildren = false
         if(k.children) {
@@ -482,22 +513,40 @@ export default {
           }
         } else {
           k.showChildren = true
+
+
+          if(k.children) {
+            _.each(k.children,( childId ) => {
+              let m = _.find(this.spaceRecords, (o) => {
+                return o.id == childId
+              })
+              if(m) {
+                showChildren(m)
+              }
+            })
+          }
+
+
+
+
+
         }
       }
       toggleChildren(k)
       //  now update the store so that show/hide children remains current
       //  TODO
+      */
       resViewStore().setShowHideRootSpaceCopy(this.rootSpaces)
     },
     toggleCreateReservationDrawer () {
       this.showCreateReservationDrawer = !this.showCreateReservationDrawer
     },
     unassignedResSelected ( resId ) {
-      console.log('resId @ resview3', resId)
+      //console.log('resId @ resview3', resId)
       const reactiveSelectedReservation = _.find(this.reservations, function(o){
         return o.id == resId
       })
-      console.log('selRES @ res', reactiveSelectedReservation)
+      //console.log('selRES @ res', reactiveSelectedReservation)
       this.selectedReservation = {...reactiveSelectedReservation}
       this.showCreateReservation = false
       this.showReservationView = true

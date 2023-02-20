@@ -101,7 +101,7 @@ const reservations = {
       data: {
         res_obj: resObj
       },
-      url: 'api/reservations/update/'
+      url: 'api/reservations/update1/'
     })
     return request
   },
