@@ -330,7 +330,7 @@ export default {
             let sKey = 'D' + iDate + 'unassigned'
             let qRecord = _.find(spaceRecords, (o) => {
                 //  this is the id of the root space for 'unassigned'
-                return o.id == 90
+                return o.isUnassigned == 1
             })
             if(qRecord) {
               if(!qRecord[sKey]){
@@ -391,6 +391,7 @@ export default {
                 return o.id == childId
           })
           if(m){
+            //  activate this if we want show to recursively down the tree
             //this.childrenShow(m)
           }
       })
@@ -465,77 +466,13 @@ export default {
       let k = _.find(this.rootSpaces, (o) => {
         return o.id == spaceId
       })
-      console.log('k @find')
+      //console.log('k @find')
       if(!k.showChildren) {
         this.childrenShow(k)
       } else {
         this.childrenHide(k)
       }
-      /*
-      let hideChildren = (k) => {
-        k.showChildren = false
-        if(k.children) {
-            _.each(k.children,( childId ) => {
-              let m = _.find(this.spaceRecords, (o) => {
-                return o.id == childId
-              })
-              if(m) {
-                hideChildren(m)
-              }
-            })
-        }
-      }
-      let showChildren = (k) => {
-        k.showChildren = true
-        if(k.children) {
-            _.each(k.children,( childId ) => {
-              let m = _.find(this.spaceRecords, (o) => {
-                return o.id == childId
-              })
-              if(m) {
-                showChildren(m)
-              }
-            })
-        }
-      }
-      let toggleChildren = (k) => {
-        if(k.showChildren == true){
-          k.showChildren = false
-          if(k.children) {
-            _.each(k.children,( childId ) => {
-              let m = _.find(this.spaceRecords, (o) => {
-                return o.id == childId
-              })
-              if(m) {
-                hideChildren(m)
-              }
-            })
-          }
-        } else {
-          k.showChildren = true
 
-
-          if(k.children) {
-            _.each(k.children,( childId ) => {
-              let m = _.find(this.spaceRecords, (o) => {
-                return o.id == childId
-              })
-              if(m) {
-                showChildren(m)
-              }
-            })
-          }
-
-
-
-
-
-        }
-      }
-      toggleChildren(k)
-      //  now update the store so that show/hide children remains current
-      //  TODO
-      */
       resViewStore().setShowHideRootSpaceCopy(this.rootSpaces)
     },
     toggleCreateReservationDrawer () {

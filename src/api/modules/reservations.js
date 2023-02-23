@@ -58,7 +58,7 @@ const reservations = {
     *@param people int
     *@param beds int
   */
-  createReservation ( token, checkin, checkout, customer, spaceId, people, beds ) {
+  createReservation ( token, checkin, checkout, customer, spaceId, people, beds, isAssigned, spaceTypePref ) {
     const promise = axios({
       headers: {
         Jwt: token
@@ -69,7 +69,9 @@ const reservations = {
         customer: customer,
         space_id: spaceId,
         people: people,
-        beds: beds
+        beds: beds,
+        is_assigned: isAssigned,
+        space_type_pref: spaceTypePref
       },
       method: 'post',
       url: 'api/reservations/'

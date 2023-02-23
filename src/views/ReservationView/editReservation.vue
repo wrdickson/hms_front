@@ -430,6 +430,9 @@ export default {
       console.log('cDateRange change', newVal)
       this.loadAvailableSpaceIds()
     },
+    cIsAssigned ( newVal ) {
+      this.loadAvailableSpaceIds
+    },
     selectedSpace ( oldVal, newVal ) {
       console.log('selectedSpace change', oldVal, newVal )
       console.log('cDateRange @ selectedSpace change:')

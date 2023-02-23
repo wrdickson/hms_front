@@ -43,6 +43,11 @@
       }
     },
     methods: {
+      getTaxTypes () {
+        api.taxTypes.getTaxTypes( this.token ).then( response => {
+        this.taxTypes = response.data.all_tax_types
+        })
+      },
       rowSelected ( o ) {
         console.log('selected')
         //  this is where we remove the reactivity
@@ -50,15 +55,11 @@
       }
     },
     mounted () {
-      api.taxTypes.getTaxTypes( this.token ).then( response => {
-        this.taxTypes = response.data.all_tax_types
-      })
+      this.getTaxTypes()
     },
     watch: {
       reloadTrigger ( oldVal, newVal ) {
-        api.taxTypes.getTaxTypes( this.token ).then( response => {
-        this.taxTypes = response.data.all_tax_types
-      })
+        this.getTaxTypes()
       }
     }
   }

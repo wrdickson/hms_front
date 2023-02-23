@@ -9,9 +9,13 @@
       <div>selectedBeds: {{ selectedBeds }}</div>
       <div>startDate: {{ startDate }}</div>
       <div>endDate: {{ endDate }}</div>
-      <div>spaceId: {{ selectedSpaceId }}</div>
+
       <div>selectedCustomer: {{ selectedCustomer }}</div>
       -->
+      <div>spaceId: {{ selectedSpaceId }}</div>
+      <div>spaceTypePref: {{spaceTypePref}}</div>
+      <div>isAssigned: {{isAssigned}}</div>
+      
       <hr/>
       <div>
         <span >
@@ -74,13 +78,29 @@
       </DateRangePicker>
       <RootSpacePicker 
         :componentKey="componentKey"
-        v-if="availableSpaceIds"
+        v-if="availableSpaceIds && isAssigned"
         :availableSpaceIds="availableSpaceIds"
         @rootSpacePicker:spaceSelected="spaceSelected">
       </RootSpacePicker>
-      <hr/>
+      <el-form size="small" label-width="120px">
+        <el-form-item :label="labelAssigned">
+          <el-select v-model="isAssigned">
+            <el-option :label="labelTrue" :value="1"></el-option>
+            <el-option :label="labelFalse" :value="0"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="!isAssigned" :label="typeLabel">
+            <el-select
+              v-model="spaceTypePref"
+            >
+              <template v-for="spaceType in spaceTypes">
+                <el-option :label="spaceType.title" :value="spaceType.id"></el-option>
+              </template>
+            </el-select>
+          </el-form-item>
+      </el-form>
       <el-form-item
-        v-if="startDate && endDate && selectedCustomer && selectedSpaceId && selectedPeople && selectedBeds"
+        v-if="startDate && endDate && selectedCustomer && selectedPeople && selectedBeds && ( selectedSpaceId || (!isAssigned && spaceTypePref)) "
       >
         <el-button type="primary" size="small" @click="createReservation">{{ $t('message.createReservation') }}</el-button>
         <el-button type="primary" size = "small" @click="checkConflicts">{{ $t('message.availability') }}</el-button>
@@ -99,6 +119,7 @@
   import { ElMessage } from 'element-plus'
   import useHandleRequestError from '/src/composables/useHandleRequestError.js'
   import { accountStore } from '/src/stores/account.js'
+  import { spaceTypesStore } from '/src/stores/spaceTypes.js'
   import api from '/src/api/api.js'
   import dayjs from 'dayjs'
 
@@ -124,9 +145,11 @@
     data() {
       return {
         availableSpaceIds: null,
+        isAssigned: 1,
         selectedCustomer: null,
         showCreateCustomer: false,
         showSearchCustomers: false,
+        spaceTypePref: 0,
         startDate: null,
         endDate: null,
         selectedSpaceId: null,
@@ -154,8 +177,24 @@
           return null
         }
       },
+      spaceTypes () {
+        return spaceTypesStore().spaceTypes
+      },
       token () {
         return accountStore().token
+      },
+      //  i18n
+      labelAssigned () {
+      return this.$t('message.assigned')
+      },
+      labelFalse () {
+        return this.$t('message.false')
+      },
+      labelTrue () {
+        return this.$t('message.true')
+      },
+      typeLabel () {
+        return this.$t('message.type')
       }
     },
     methods: {
@@ -180,13 +219,21 @@
         console.log('spaceId', this.selectedSpaceId )
         console.log('customer: ', this.selectedCustomer )
         */
+       let pSTP
+       if( !this.spaceTypePref ) {
+         pSTP = 0
+       } else { 
+         pSTP = this.spaceTypePref
+       }
         api.reservations.createReservation( this.token, 
                                             this.fStartDate, 
                                             this.fEndDate, 
                                             this.selectedCustomer, 
                                             this.selectedSpaceId, 
                                             this.selectedPeople, 
-                                            this.selectedBeds ).then( response => {
+                                            this.selectedBeds,
+                                            this.isAssigned,
+                                            pSTP ).then( response => {
           if(response.data.create.execute_res_sql == true){
             ElMessage({
               type: 'success',
@@ -200,13 +247,13 @@
             //this.$emit('createReservation:closeDrawer')
           }
         }).catch( error => {
-          console.log('error', error)
+          //console.log('error', error)
           this.handleRequestError(error)
         })
 
       },
       customerSelected ( e ) {
-        console.log( e )
+        //console.log( e )
         this.selectedCustomer = e
       },
       dRangeClearDates () {
@@ -232,7 +279,7 @@
         }
       },
       peopleQtyChosen ( people ) {
-        console.log('people chosen: ', people )
+        //console.log('people chosen: ', people )
         this.selectedPeople = people
       },
       resetForm () {
@@ -243,10 +290,19 @@
         this.selectedCustomer = null
         this.showCreateCustomer = false
         this.showSearchCustomers = false
+        this.isAssigned = 1
+        this.spaceTypePref = null
+        this.selectedSpaceId = null
       },
       spaceSelected ( spaceId ) {
-        console.log(spaceId)
+        //console.log(spaceId)
         this.selectedSpaceId = spaceId
+      }
+    },
+    watch: {
+      isAssigned ( oldVal, newVal ) {
+        this.selectedSpaceId = null
+        this.spaceTypePref = 0
       }
     }
   }

@@ -2,8 +2,34 @@ import axios from 'axios'
 
 const saleTypeGroups = {
 
+  createSaleTypeGroup: (token, obj ) => {
+    const promise = axios({
+      method: 'post',
+      headers: {
+        'Jwt': token
+      },
+      data: obj,
+      url: 'api/sale-type-group-create/'
+    })
+    return promise
+  },
+
+  deleteSaleTypeGroup: ( token, saleTypeGroupId ) => {
+    const promise = axios({
+      method: 'post',
+      headers: {
+        'Jwt': token
+      },
+      data: {
+        sale_type_group_id: saleTypeGroupId
+      },
+      url: 'api/sale-type-group-delete/'
+    })
+    return promise
+  },
+
   getSaleTypeGroups: ( token ) => {
-    const request = axios({
+    const promise = axios({
       method: 'post',
       headers: {
         'Jwt': token
@@ -13,7 +39,18 @@ const saleTypeGroups = {
       },
       url: 'api/sale-type-groups/get-all/'
     })
-    return request
+    return promise
+  },
+  updateSaleTypeGroup: ( token, obj ) => {
+    const promise = axios({
+      method: 'post',
+      headers: {
+        'Jwt': token
+      },
+        data: {...obj},
+      url: 'api/sale-type-group-update/'
+    })
+    return promise
   }
 
 }
