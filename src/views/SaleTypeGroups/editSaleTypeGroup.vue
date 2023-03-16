@@ -96,11 +96,11 @@
         }
       },
       isGreaterThan1 ( rule, value, callback ) {
-      if( parseInt(value) < 1 ) {
-        callback( new Error( 'must be greater than 0' ))
-      } else {
-        callback()
-      }
+        if( parseInt(value) < 1 ) {
+          callback( new Error( 'must be greater than 0' ))
+        } else {
+          callback()
+        }
       },
       isInteger ( rule, value, callback ) {
         const pattern = /^[0-9]*$/

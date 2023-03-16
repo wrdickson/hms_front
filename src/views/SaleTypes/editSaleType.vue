@@ -150,6 +150,21 @@
           callback()
         }
       },
+      isGreaterThan1 ( rule, value, callback ) {
+        if( parseInt(value) < 1 ) {
+          callback( new Error( 'must be greater than 0' ))
+        } else {
+          callback()
+        }
+      },
+      isInteger ( rule, value, callback ) {
+        const pattern = /^[0-9]*$/
+        if( pattern.test(value) == false ) {
+          callback( new Error('must be numbers') )
+        } else {
+          callback()
+        }
+      },
       isTwoDecimal ( rule, value, callback ) {
         let split = value.toString().split('.')
         console.log('split', split)

@@ -10,7 +10,7 @@
     v-if="displayCreateSaleType"
     @createSaleType:close="closeCreateSaleType"
     @createSaleType:create="createSaleType"
-    />
+  />
 
   <EditSaleType
     v-if="selectedSaleType"
@@ -65,6 +65,8 @@
         obj.is_fixed_price = parseInt(obj.is_active)
         obj.fixed_price = parseFloat(obj.fixed_price)
         obj.title = obj.title.trim()
+        
+        //  run the query
         api.saleTypes.createSaleType(this.token, obj).then( response => {
           if( response.data && response.data.create == true){
             saleTypesStore().setSaleTypes(response.data.all_sale_types)
