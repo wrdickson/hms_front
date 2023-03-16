@@ -155,7 +155,7 @@
         api.spaceTypes.updateSpaceType( this.token, obj ).then( ( response ) => {
           if( response.data.update == true ) {
             //  update the store
-            spaceTypesStore().setSpaceTypes(response.data.all_sale_type_groups)
+            spaceTypesStore().setSpaceTypes(response.data.space_types )
             //  force taxTypesTable component to reload
             this.reloadTrigger += 1
             ElMessage({

@@ -35,7 +35,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script lang = "js">
   //import Schema from 'async-validator';
   //Schema.warning = function(){};
   export default {

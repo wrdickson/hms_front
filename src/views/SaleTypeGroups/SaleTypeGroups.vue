@@ -34,7 +34,7 @@
   </el-row>
 </template>
 
-<script lang="js">
+<script lang = "js">
   import TableSaleTypeGroups from '/src/views/SaleTypeGroups/tableSaleTypeGroups.vue'
   
   import EditSaleTypeGroup from '/src/views/SaleTypeGroups/editSaleTypeGroup.vue'
