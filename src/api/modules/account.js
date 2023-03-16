@@ -13,16 +13,14 @@ const account = {
     })
     return request
   },
-  createAccount: ( obj, token ) => {
+  createAccount: ( token, obj ) => {
     const request = axios({
       method: 'post',
       headers: {
         'Jwt': token
       },
-      data: {
-        newAccountObj: obj
-      },
-      url: '/api-ezbook/accounts/'
+      data: obj,
+      url: '/api/accounts/create/'
     })
     return request
   },
@@ -35,6 +33,38 @@ const account = {
       url: 'api/authorize-token/'
     })
     return request
+  },
+  getAllAccounts: ( token ) => {
+    const promise = axios({
+      method: 'post',
+      headers: { 
+        'Jwt': token
+      },
+      url: 'api/accounts/get-all/'
+    })
+    return promise
+  },
+  updateAccount: ( token, obj ) => {
+    const promise = axios({
+      method: 'post',
+      headers: { 
+        'Jwt': token
+      },
+      data: obj,
+      url: 'api/accounts/update/'
+    })
+    return promise
+  },
+  updateAccountPassword: ( token, obj ) => {
+    const promise = axios({
+      method: 'post',
+      headers: { 
+        'Jwt': token
+      },
+      data: obj,
+      url: 'api/accounts/update-password/'
+    })
+    return promise
   }
 }
 export default account

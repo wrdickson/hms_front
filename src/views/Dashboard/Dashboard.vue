@@ -2,6 +2,7 @@
   <el-container style="height: 600px;">
     <el-aside width="200px">
       <el-menu class="el-menu-dashboard">
+        <el-menu-item @click="hideAllViews(), showAccounts=true" index="1-0">Accounts</el-menu-item>
         <el-menu-item @click="hideAllViews(), showSpaceEdit=true" index="1-1">Space Edit</el-menu-item>
         <el-menu-item @click="hideAllViews(), showTaxTypes=true" index="1-2">Tax Types</el-menu-item>
         <el-menu-item @click="hideAllViews(), showSaleTypeGroups=true" index="1-3">SaleTypeGroups</el-menu-item>
@@ -11,6 +12,9 @@
       </el-menu>
     </el-aside>
     <el-main>
+      <Accounts
+        v-if="showAccounts">
+      </Accounts>
       <SpaceEdit
         v-if="showSpaceEdit"
       >
@@ -36,6 +40,7 @@ import TaxTypes from '/src/views/TaxTypes/TaxTypes.vue'
 import SaleTypeGroups from '/src/views/SaleTypeGroups/SaleTypeGroups.vue'
 import SpaceTypes from '/src/views/SpaceTypes/SpaceTypes.vue'
 import SaleTypes from '/src/views/SaleTypes/SaleTypes.vue'
+import Accounts from '/src/views/Accounts/Accounts.vue'
 export default {
   name: 'Dashboard',
   components: {
@@ -43,7 +48,8 @@ export default {
     TaxTypes,
     SaleTypeGroups,
     SpaceTypes,
-    SaleTypes
+    SaleTypes,
+    Accounts
   },
   data () {
     return {
@@ -51,7 +57,8 @@ export default {
       showTaxTypes: false,
       showSaleTypeGroups: false,
       showSpaceTypes: false,
-      showSaleTypes: false
+      showSaleTypes: false,
+      showAccounts: false
     }
   },
   methods: {
@@ -61,6 +68,7 @@ export default {
       this.showSaleTypeGroups = false
       this.showSpaceTypes = false
       this.showSaleTypes = false
+      this.showAccounts = false
     }
   }
 }
