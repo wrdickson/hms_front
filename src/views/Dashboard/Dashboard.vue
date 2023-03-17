@@ -8,7 +8,7 @@
         <el-menu-item @click="hideAllViews(), showSaleTypeGroups=true" index="1-3">SaleTypeGroups</el-menu-item>
         <el-menu-item @click="hideAllViews(), showSpaceTypes=true" index="1-4">Space Types</el-menu-item>
         <el-menu-item @click="hideAllViews(), showSaleTypes=true" index="1-5">Sale Types</el-menu-item>
-        <el-menu-item index="1-3">item three</el-menu-item>
+        <el-menu-item @click="hideAllViews(), showPaymentTypes=true" index="1-6">Payment Types</el-menu-item>
       </el-menu>
     </el-aside>
     <el-main>
@@ -30,6 +30,11 @@
       <SaleTypes
         v-if="showSaleTypes"
       ></SaleTypes>
+
+      <PaymentTypes
+        v-if="showPaymentTypes">
+      </PaymentTypes>
+      
     </el-main>
   </el-container>
 </template>
@@ -41,6 +46,7 @@ import SaleTypeGroups from '/src/views/SaleTypeGroups/SaleTypeGroups.vue'
 import SpaceTypes from '/src/views/SpaceTypes/SpaceTypes.vue'
 import SaleTypes from '/src/views/SaleTypes/SaleTypes.vue'
 import Accounts from '/src/views/Accounts/Accounts.vue'
+import PaymentTypes from '/src/views/PaymentTypes/PaymentTypes.vue'
 export default {
   name: 'Dashboard',
   components: {
@@ -49,7 +55,8 @@ export default {
     SaleTypeGroups,
     SpaceTypes,
     SaleTypes,
-    Accounts
+    Accounts,
+    PaymentTypes
   },
   data () {
     return {
@@ -58,7 +65,8 @@ export default {
       showSaleTypeGroups: false,
       showSpaceTypes: false,
       showSaleTypes: false,
-      showAccounts: false
+      showAccounts: false,
+      showPaymentTypes: false
     }
   },
   methods: {
@@ -69,6 +77,7 @@ export default {
       this.showSpaceTypes = false
       this.showSaleTypes = false
       this.showAccounts = false
+      this.showPaymentTypes = false
     }
   }
 }
