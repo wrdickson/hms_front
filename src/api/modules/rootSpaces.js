@@ -62,6 +62,8 @@ const rootSpaces = {
         updateSpace
       },
       url: 'api/root-spaces/update/' + updateSpace.id
+    }).catch( error => {
+      throw new Error(error)
     })
     return promise
   }

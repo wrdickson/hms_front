@@ -21,14 +21,16 @@
             <el-option :label="i18False" value="0"/>
           </el-select>
         </el-form-item>
+        <!--
         <el-form-item :label="i18ChildOf">
           <el-select v-model="selectedSpaceCopy.childOf" placeholder="Select">
             <el-option label="0" value="0"></el-option>
             <template v-for="space in rootSpaces">
-              <el-option :label="space.title" :value="space.id" ></el-option>
+              <el-option v-if="selectedSpaceCopy.id != space.id"  :label="space.title" :value="space.id" ></el-option>
             </template>
           </el-select>
         </el-form-item>
+        -->
         <el-form-item :label="i18Type">
           <el-select v-model="selectedSpaceCopy.spaceType">
             <template v-for="spaceType in spaceTypes">
@@ -79,7 +81,7 @@
 
 </template>
 
-<script>
+<script lang="js">
 import _ from 'lodash'
 export default {
   name: 'editRootSpace',

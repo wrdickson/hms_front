@@ -10,6 +10,7 @@ import saleTypeGroups from './modules/apiSaleTypeGroups.js'
 import paymentTypes from './modules/apiPaymentTypes.js'
 import payments from './modules/apiPayments.js'
 import folios from './modules/apiFolios.js'
+import options from './modules/apiOptions.js'
 
 const api = {
   account: account,
@@ -23,7 +24,8 @@ const api = {
   saleTypeGroups: saleTypeGroups,
   paymentTypes: paymentTypes,
   payments: payments,
-  folios: folios
+  folios: folios,
+  options: options
 }
 
 export default api

@@ -6,7 +6,7 @@
   </el-row>
   <el-row>
     <el-col :xs="24">
-      <el-button type="primary" @click="displayCreatePaymentType = true">{{ i18nCreate }} {{ iPaymentType }}</el-button>
+      <el-button type="primary" @click="displayCreatePaymentType = true, selectedPaymentType = null">{{ i18nCreate }} {{ iPaymentType }}</el-button>
     </el-col>
   </el-row>
   

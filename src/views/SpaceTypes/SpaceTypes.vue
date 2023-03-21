@@ -6,7 +6,7 @@
   </el-row>
   <el-row>
     <el-col :xs="24">
-      <el-button type="primary" @click="displayCreateSpaceType = true">{{ i18nCreate }} {{ i18nSpaceType }}</el-button>
+      <el-button type="primary" @click="displayCreateSpaceType = true, selectedSpaceType = null">{{ i18nCreate }} {{ i18nSpaceType }}</el-button>
     </el-col>
   </el-row>
   
@@ -156,11 +156,11 @@
           if( response.data.update == true ) {
             //  update the store
             spaceTypesStore().setSpaceTypes(response.data.space_types )
-            //  force taxTypesTable component to reload
+            //  force tableSpaceTypes component to reload
             this.reloadTrigger += 1
             ElMessage({
               type: 'success',
-              message: 'Tax type was updated.'
+              message: 'Space type was updated.'
             })
           } else {
             ElMessage({

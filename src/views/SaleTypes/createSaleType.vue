@@ -66,13 +66,15 @@
   import _ from 'lodash'
   export default {
     name: 'CreateSaleType',
-    emits:  [ 'createSaleType:close', 'createSaleType:create' ],
+    props: [ 'reloadTrigger' ],
+    emits: [ 'createSaleType:close', 'createSaleType:create' ],
     data () {
       return {
         eSaleType: {
           title: '',
+          fixed_price: '0.00',
           is_active: '1',
-          is_fixed_price: '1',
+          is_fixed_price: null,
           tax_types: []
         },
         rules: {
@@ -154,6 +156,7 @@
           if(valid) {
             let estClean = {...this.eSaleType}
             estClean.tax_types = [...this.eSaleType.tax_types]
+            console.log('estClean.fixed_price', estClean.fixed_price)
             estClean.fixed_price = parseFloat(estClean.fixed_price).toFixed(2)
             this.$emit('createSaleType:create', estClean)
           } else {
@@ -201,6 +204,18 @@
           }else {
             callback()
           }
+        }
+      }
+    },
+    watch: {
+      reloadTrigger () {
+        console.log('reloadTrigger on createSaleType.vue')
+        this.eSaleType = {
+          title: '',
+          fixed_price: '0.00',
+          is_active: '1',
+          is_fixed_price: '1',
+          tax_types: []
         }
       }
     }

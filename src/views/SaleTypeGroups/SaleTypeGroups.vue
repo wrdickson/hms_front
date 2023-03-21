@@ -6,7 +6,7 @@
   </el-row>
   <el-row>
     <el-col :xs="24">
-      <el-button type="primary" @click="displayCreateSaleTypeGroup = true">{{ i18nCreate }} {{ iGroup }}</el-button>
+      <el-button type="primary" @click="displayCreateSaleTypeGroup = true, selectedSaleTypeGroup = null">{{ i18nCreate }} {{ iGroup }}</el-button>
     </el-col>
   </el-row>
   

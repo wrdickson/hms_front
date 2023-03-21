@@ -330,6 +330,7 @@ export default {
             let sKey = 'D' + iDate + 'unassigned'
             let qRecord = _.find(spaceRecords, (o) => {
                 //  this is the id of the root space for 'unassigned'
+                //  THERE HAD BETTER THE FUCK BE ONLY ONE OF THESE
                 return o.isUnassigned == 1
             })
             if(qRecord) {
@@ -342,11 +343,7 @@ export default {
             }
           }
         }
-
-
-
       })
-      
       return spaceRecords
     },
     tableHeight () {

@@ -8,6 +8,7 @@
 
   <CreateSaleType
     v-if="displayCreateSaleType"
+    :reloadTrigger="reloadTrigger"
     @createSaleType:close="closeCreateSaleType"
     @createSaleType:create="createSaleType"
   />
@@ -41,7 +42,8 @@
       return {
         saleTypes: [],
         selectedSaleType: null,
-        displayCreateSaleType: false
+        displayCreateSaleType: false,
+        reloadTrigger: 1
       }
     },
     computed: {
@@ -62,7 +64,7 @@
         //  set types
         obj.display_order = parseInt(obj.display_order)
         obj.is_active = parseInt(obj.is_active)
-        obj.is_fixed_price = parseInt(obj.is_active)
+        obj.is_fixed_price = parseInt(obj.is_fixed_price)
         obj.fixed_price = parseFloat(obj.fixed_price)
         obj.title = obj.title.trim()
         
@@ -71,11 +73,13 @@
           if( response.data && response.data.create == true){
             saleTypesStore().setSaleTypes(response.data.all_sale_types)
             this.saleTypes = response.data.all_sale_types
+            this.reloadTrigger += 1
             ElMessage({
               type: 'success',
               message: 'Sale Type created'
             })
           } else {
+            this.reloadTrigger += 1
             ElMessage({
               type: 'warning',
               message: 'ERROR: not created'
@@ -89,7 +93,6 @@
       },
       getSaleTypes () {
         api.saleTypes.getSaleTypes(this.token).then( response => {
-          console.table(response.data.all_sale_types)
           this.saleTypes = response.data.all_sale_types
         })
       },
@@ -106,7 +109,6 @@
         obj.is_fixed_price = parseInt(obj.is_fixed_price)
         obj.is_active = parseInt(obj.is_active)
         obj.display_order = parseInt(obj.display_order)
-        console.table(obj)
         api.saleTypes.updateSaleType( this.token, obj ).then( response => {
           if( response.data && response.data.update == true){
             saleTypesStore().setSaleTypes(response.data.all_sale_types)

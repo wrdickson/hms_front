@@ -10,14 +10,7 @@
       index="/resView3">
         {{ $t('message.reservationView') }}
     </el-menu-item>
-    <el-menu-item
-      index="/Composables">
-        Composables
-    </el-menu-item>
-    <el-menu-item
-      index="/SpaceEdit">
-        SpaceEdit
-    </el-menu-item>
+
   </el-menu>
 </template>
 

@@ -5,7 +5,22 @@
     after checking if we have a user/token in localStorage, and verifying that.
     It's an async operation, so we have to wait . . . 
   -->
-  <div v-if="authCompleted">
+  <div v-if="debugInit">
+    <h4>Console:</h4>
+    <div>token:{{token}}</div>
+    <div>account:{{JSON.stringify(account)}}</div>
+    <div>dataLoaded:{{dataLoaded}}</div>
+    <div>rootSpaces:{{rootSpaces}}</div>
+    <div>saleTypes:{{saleTypes}}</div>
+    <div>saleTypeGroups:{{saleTypeGroups}}</div>
+    <div>spaceTypes:{{spaceTypes}}</div>
+    <div>taxTypes:{{taxTypes}}</div>
+    <div>allPaymentTypes:{{allPaymentTypes}}</div>
+
+
+    <div>authCompleted:{{authCompleted}}</div>
+  </div>
+  <div v-if="dataLoaded" >
     <el-drawer
       v-model="drawerVisible"
       size="180px"
@@ -26,7 +41,7 @@
               :ellipsis="true"
             >
               <span class="hidden-xl-and-up"><el-button type="primary" link @click="drawerVisible = true"><font-awesome-icon icon="fa-solid fa-bars" size="2x" /></el-button></span>
-              <el-menu-item class="navbarBrand" index="1" style="border-bottom: 0px;">hms_front</el-menu-item>
+              <el-menu-item class="navbarBrand" index="1" style="border-bottom: 0px;">Harvey</el-menu-item>
               <div class="flex-grow"/>
               <userMenu :account="account"/>
               <localeSwitch/>
@@ -41,6 +56,7 @@
 </template>
 
 <script>
+import { optionsStore } from './stores/options.js'
 import { accountStore } from './stores/account.js'
 import { saleTypesStore } from './stores/saleTypes.js'
 import { saleTypeGroupsStore } from './stores/saleTypeGroups.js'
@@ -59,16 +75,23 @@ export default {
   },
   data () {
     return {
+
+      debugInit: false,
+
       drawerVisible: false,
       //  we don't want the app to start until we have completed
       //  the auth process, the v-if in the wrapper div above
       //  will accomplish this
-      authCompleted: false,
+      authCompleted: 0,
       rootSpaces: null,
       saleTypes: null,
-      saleTypeGropus: null,
+      saleTypeGroups: null,
       spaceTypes: null,
-      taxTypes: null
+      taxTypes: null,
+      allPaymentTypes: null,
+      //autoloadOptions: null
+
+
     }
   },
   computed: {
@@ -76,11 +99,15 @@ export default {
       return accountStore().account
     },
     dataLoaded() {
-      if( this.authCompleted && this.rootSpaces && this.saleTypes && this.saleTypeGroups && this.taxTypes ) {
+      if( this.authCompleted && this.rootSpaces && this.saleTypes && this.saleTypeGroups && this.spaceTypes && this.taxTypes && this.allPaymentTypes 
+      ) {
         return true
       } else {
         return false
       }
+    },
+    siteName () {
+      return optionsStore().site_name
     },
     token() {
       return accountStore().token
@@ -91,57 +118,76 @@ export default {
       this.drawerVisible = false
     },
     loadInitialData () {
+      //  options
+      /*
+      api.options.getAutoloadOptions().then( response => {
+        console.log(response.data)
+        let obj = {}
+        _.each(response.data, option => {
+          obj[option.option_name] = {
+            'id': option.id,
+            'option_value': option.option_value,
+            'autoload': option.autoload,
+            'is_json': option.is_json
+          }
+         })
+         console.log('obj', obj)
+        this.autoloadOptions = obj
+      })
+      */
+      //      this.autoloadOptions = 1
       //  rootSpaces
       api.rootSpaces.getRootSpaces( this.token ).then( response => {
           rootSpacesStore().setRootSpaces( response.data.root_spaces_children_parents )
-          this.rootSpaces = response.data.root_spaces_children_parents
+          this.rootSpaces = 1
       })
 
       //  saleTypes
       api.saleTypes.getSaleTypes( this.token ).then( response => {
         //  set the store
         saleTypesStore().setSaleTypes(response.data.all_sale_types)
-        this.saleTypes = response.data.all_sale_types
+        this.saleTypes = 1
       })
 
       //  sale type groups
       api.saleTypeGroups.getSaleTypeGroups( this.token ).then( response => {
         saleTypeGroupsStore().setSaleTypeGroups( response.data.all_sale_type_groups )
-        this.saleTypeGroups = response.data.all_sale_type_groups
+        this.saleTypeGroups = 1
       })
 
       //  space types
       api.spaceTypes.getSpaceTypes().then ( response => {
         spaceTypesStore().setSpaceTypes( response.data.space_types )
-        this.spaceTypes = response.data.space_types
+        this.spaceTypes = 1
       })
 
       // tax types
       api.taxTypes.getTaxTypes( this.token ).then( response => {
         //  set the store
         taxTypesStore().setTaxTypes(response.data.all_tax_types)
-        this.taxTypes = response.data.all_tax_types
+        this.taxTypes = 1
       })
 
       // payment types
-      api.paymentTypes.getActivePaymentTypes( this.token ).then ( response => {
+      api.paymentTypes.getAllPaymentTypes( this.token ).then ( response => {
         paymentTypesStore().setActivePaymentTypes( response.data.active_payment_types )
-        this.activePaymentTypes = response.data.active_payment_types
+        paymentTypesStore().setAllPaymentTypes( response.data.all_payment_types )
+        this.allPaymentTypes = 1
       })
     },
     showDrawer () {
       this.drawerVisible = true
     }
   },
-  created() {
+  mounted() {
     //  check for a user in localstorage
     const account = JSON.parse(localStorage.getItem('account'))
     const token = localStorage.getItem('token')
     
-    if (account && token != 0) {
+    if (account && token ) {
+      console.log('account:', account)
+      console.log('token:', token)
       api.account.authorizeToken( token ).then( (response) => {
-        console.log('auth token @ refresh', token)
-        console.log('response', response)
         if(response.data.decoded.account){
           accountStore().setAccount( response.data.decoded.account )
           accountStore().setToken( token )
@@ -155,6 +201,9 @@ export default {
         this.$router.push('/Login')
       })
     } else {
+      console.log('else')
+      console.log('account:', account)
+      console.log('token:', token)
       accountStore().setAccountToGuest()
       this.authCompleted = true
       this.loadInitialData()

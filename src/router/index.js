@@ -1,51 +1,35 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import Home from '/src/views/Home.vue'
-import Login from '/src/views/Login.vue'
-import Logoff from '/src/views/Logoff.vue'
-import Composables from '/src/views/Composables.vue'
-import SpaceEdit from '/src/views/SpaceEdit/SpaceEdit.vue'
-import Dashboard from '/src/views/Dashboard/Dashboard.vue'
 
 const routes = [
     {
       path: '/',
       name: 'Blank',
-      component: Home
-    },
-    {
-      path: '/Composables',
-      name: 'Composables',
-      component: Composables
+      component: () => import('/src/views/Home.vue')
     },
     {
       path: '/Dashboard',
       name: 'Dashboard',
-      component: Dashboard
+      component: () => import('/src/views/Dashboard/Dashboard.vue')
     },
     {
       path: '/Home',
       name: 'Home',
-      component: Home
+      component: () => import('/src/views/Home.vue')
     },
     {
       path: '/Login',
       name: 'Login',
-      component: Login
+      component: () => import('/src/views/Login.vue')
     },
     {
       path: '/Logoff',
       name: 'Logoff',
-      component: Logoff
+      component: () => import('/src/views/Logoff.vue')
     },
     {
       path: '/resView3',
       name: 'resView3',
       component: () => import('/src/views/resView3/resView3.vue')
-    },
-    {
-      path: '/SpaceEdit',
-      name: 'SpaceEdit',
-      component: SpaceEdit
     }
   ]
 

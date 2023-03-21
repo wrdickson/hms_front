@@ -2,7 +2,7 @@
  
   <el-row>
     <el-col :span="12">
-      <el-button @click="showCreateSpace = true" type="primary" size="small">{{$t('message.createSpace')}}</el-button>
+      <el-button @click="showCreateSpace = true, selectedSpace = null" type="primary" size="small">{{$t('message.createSpace')}}</el-button>
       <el-divider/>
       <rootSpaceTree
         v-if="rootSpaces"
@@ -44,6 +44,7 @@ import RootSpaceTree from '/src/views/SpaceEdit/rootSpaceTree.vue'
 import editRootSpace from '/src/views/SpaceEdit/editRootSpace.vue'
 import createRootSpace from '/src/views/SpaceEdit/createRootSpace.vue'
 import { ElMessage } from 'element-plus'
+import { ElLoading } from 'element-plus'
 
 export default {
     name: 'SpaceEdit',
@@ -53,7 +54,8 @@ export default {
         selectedSpace: null,
         showCreateSpace: false,
         rootSpaces: null,
-        spaceTypes: null
+        spaceTypes: null,
+        isLoading: false
       };
     },
     computed: {
@@ -102,8 +104,8 @@ export default {
         deleteSpace ( space ) {
           console.log('d:', space )
           api.rootSpaces.deleteRootSpace ( this.token, space.id ).then( (response) => {
-            if(response.data.execute == true){
-            const sorted = _.sortBy(response.data.root_spaces_children_parents, 'show_order')
+            if(response.data.delete.execute_delete == true){
+            const sorted = _.sortBy(response.data.root_spaces_children_parents, 'display_order')
             this.rootSpaces = sorted
             //  tell resview that root spaces have changed
             resViewStore().setShowHideRootSpaceCopy(null)
@@ -128,16 +130,39 @@ export default {
           this.selectedSpace = null
         },
         updateSpace ( uSpace ) {
-          console.log('uSpace on parent', uSpace)
+          //  trigger full-screen loading
+          const loading = ElLoading.service({
+            lock: true,
+            text: 'Loading',
+            background: 'rgba(0, 0, 0, 0.7)',
+          })
+          
           api.rootSpaces.updateRootSpace( this.token, uSpace ).then( (response) => {
-            console.log(response.data)
+            //  close full-screen loading
+
+            loading.close()
+
+
+            console.table(response.data)
             const sorted = _.sortBy(response.data.root_spaces_children_parents, 'displayOrder')
             this.rootSpaces = sorted
             //update the store
             //nuke the show/hide copy that is used by resview
             resViewStore().setShowHideRootSpaceCopy(null)
+            //  reset the store with updated data
             rootSpacesStore().setRootSpaces(sorted)
+            ElMessage({
+              type: 'success',
+              message: 'space updated'
+            })
+          }).catch( err => {
+            loading.close()
+            ElMessage({
+              type: 'error',
+              message: err
+            })
           })
+           
         }
     },
     mounted () {

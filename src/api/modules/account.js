@@ -20,7 +20,7 @@ const account = {
         'Jwt': token
       },
       data: obj,
-      url: '/api/accounts/create/'
+      url: 'api/accounts/create/'
     })
     return request
   },
