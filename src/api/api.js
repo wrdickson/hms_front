@@ -11,6 +11,7 @@ import paymentTypes from './modules/apiPaymentTypes.js'
 import payments from './modules/apiPayments.js'
 import folios from './modules/apiFolios.js'
 import options from './modules/apiOptions.js'
+import reports from './modules/apiReports.js'
 
 const api = {
   account: account,
@@ -25,7 +26,8 @@ const api = {
   paymentTypes: paymentTypes,
   payments: payments,
   folios: folios,
-  options: options
+  options: options,
+  reports: reports
 }
 
 export default api

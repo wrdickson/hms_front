@@ -54,13 +54,28 @@
           @edit-reservation:modify-reservation-1="modifyReservation1">
         </EditReservation>
       </el-collapse-item>
-      <el-collapse-item title="History" name="1">
+      <el-collapse-item title="Notes" name="1">
+        <el-button size="small" @click="">an</el-button>
+        <div>
+          <el-input/>
+        </div>
+        <table class="historyTable">
+          <tbody>
+            <tr v-for="note in selectedReservation.notes">
+              <td>{{note.t}}</td>
+              <td>{{note.n}}</td>
+              <td>{{note.d}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </el-collapse-item>
+      <el-collapse-item title="History" name="2">
         <table class="historyTable">
           <tbody>
             <tr v-for="history in selectedReservation.history">
-              <td>{{history.text}}</td>
-              <td>{{history.account_name}}</td>
-              <td>{{history.date}}</td>
+              <td>{{history.t}}</td>
+              <td>{{history.n}}</td>
+              <td>{{history.d}}</td>
             </tr>
           </tbody>
         </table>
@@ -212,6 +227,7 @@
 
 .historyTable td {
   border: 1px solid rgb(139, 139, 139);
+  padding: 2px;
 }
 
 .wrapper{

@@ -2,7 +2,7 @@
   <div>
     <el-button-group type="primary">
       <template v-for="group in groupSet">
-        <el-button size="small" @click="handleGroupClick(group)" >
+        <el-button size="large" @click="handleGroupClick(group)" >
           {{group.groupTitle}}
         </el-button>
       </template>
@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<script>
+<script lang = "js">
   import { saleTypeGroupsStore } from '/src/stores/saleTypeGroups.js'
   import { saleTypesStore } from '/src/stores/saleTypes.js'
   import _ from 'lodash'

@@ -1,18 +1,20 @@
 <template>
   <div>
     <el-row>
-      <el-col :span="12">
-        <div>{{ selectedReservation.customer_first }}&nbsp{{ this.selectedReservation.customer_last }}</div>
-        <div>
-          <span>{{ selectedReservation.checkin }}</span>
-          <span> : </span>
-          <span>{{ selectedReservation.checkout }}</span>
+      <el-col :span="6">
+        <div v-if="selectedReservation.id">
+          <div>{{ selectedReservation.customer_first }}&nbsp{{ this.selectedReservation.customer_last }}</div>
+          <div>
+            <span>{{ selectedReservation.checkin }}</span>
+            <span> : </span>
+            <span>{{ selectedReservation.checkout }}</span>
+          </div>
+          <div v-if="rootSpace">{{ $t('message.spaceLabel') }}: {{ rootSpace.title }}</div>
+          <div>{{ $t('message.people') }}: {{ selectedReservation.people }}</div>
+          <div>{{ $t('message.beds') }}: {{ selectedReservation.beds }}</div>
         </div>
-        <div v-if="rootSpace">{{ $t('message.spaceLabel') }}: {{ rootSpace.title }}</div>
-        <div>{{ $t('message.people') }}: {{ selectedReservation.people }}</div>
-        <div>{{ $t('message.beds') }}: {{ selectedReservation.beds }}</div>
         <hr/>
-          <el-button type="danger" size="small" @click="resetSale">Reset Sale</el-button>
+          <el-button type="danger" @click="resetSale">Reset Sale</el-button>
           <SaleGroupSelect
             @sale-group-select:group-selected="groupSelected"
           />
@@ -40,11 +42,17 @@
           @compelete-sale:payment-type-selected="handlePaymentTypeSelected"
         />
       </el-col>
-      <el-col :span="12">
+      <el-col :span="18">
+        <FolioSaleDisplay1
+          :folioViewerReloadKey="folioViewerReloadKey"
+          :folioId="folioId"
+        />
+        <!--
         <FolioViewer
           :folioViewerReloadKey="folioViewerReloadKey"
-          :selectedReservation="selectedReservation"
+          :folioId="folioId"
         />
+        -->
       </el-col>
     </el-row>
   </div>
@@ -61,13 +69,14 @@
   import FolioViewer from '/src/views/FolioView/folioDisplay.vue'
   import SaleGroupSelect from '/src/views/FolioView/saleGroupSelect.vue'
   import SaleTypeSelect from '/src/views/FolioView/saleTypeSelect.vue'
+  import FolioSaleDisplay1 from '/src/views/FolioView/folioSaleDisplay1.vue'
   import api from '/src/api/api.js'
   import _ from 'lodash'
   export default {
     name: 'FolioView',
     props: [ 'folioId', 'selectedReservation', 'componentKey' ],
     components: {
-      ProcessSaleType, SaleItems, CompleteSale, FolioViewer, SaleGroupSelect, SaleTypeSelect
+      ProcessSaleType, SaleItems, CompleteSale, FolioViewer, SaleGroupSelect, SaleTypeSelect, FolioSaleDisplay1
     },
     data () {
       return {
@@ -147,7 +156,7 @@
           const saleObj = {
             resId: this.selectedReservation.id,
             resCustomer: this.selectedReservation.customer,
-            resFolio: this.selectedReservation.folio,
+            resFolio: this.folioId,
             saleItems: this.saleItems,
             paymentType: paymentType,
             saleTotal: this.saleTotal,

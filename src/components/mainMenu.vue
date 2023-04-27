@@ -10,6 +10,16 @@
       index="/resView3">
         {{ $t('message.reservationView') }}
     </el-menu-item>
+    <el-menu-item
+      v-if="account.permission > 0"
+      index="/houseAccountView">
+      House Account
+    </el-menu-item>
+    <el-menu-item
+      index="/ShiftReport">
+      Shift Report
+    </el-menu-item>
+
 
   </el-menu>
 </template>

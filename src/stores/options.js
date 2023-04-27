@@ -4,8 +4,7 @@ import _ from 'lodash'
 export const optionsStore = defineStore({
   id: 'optionsStore',
   state: () => ({
-    autoloadOptions: null,
-    options: null
+    autoloadOptions: null
   }),
   actions: {
     setAutoloadOptions ( autoloadOptions ) {

@@ -39,7 +39,7 @@
     </el-form>
     <el-form v-if="saleTotal && saleTotal > 0 || saleTotal < 0">
       <el-form-item>
-        <el-button @click="addToSale" size="small" type="success">Add to sale</el-button>
+        <el-button @click="addToSale" type="success">Add to sale</el-button>
       </el-form-item>
     </el-form>
   </div>

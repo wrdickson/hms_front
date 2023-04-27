@@ -41,7 +41,7 @@
               :ellipsis="true"
             >
               <span class="hidden-xl-and-up"><el-button type="primary" link @click="drawerVisible = true"><font-awesome-icon icon="fa-solid fa-bars" size="2x" /></el-button></span>
-              <el-menu-item class="navbarBrand" index="1" style="border-bottom: 0px;">Harvey</el-menu-item>
+              <el-menu-item class="navbarBrand" index="1" style="border-bottom: 0px;">{{siteName}}</el-menu-item>
               <div class="flex-grow"/>
               <userMenu :account="account"/>
               <localeSwitch/>
@@ -64,6 +64,7 @@ import { taxTypesStore } from './stores/taxTypes.js'
 import { rootSpacesStore } from './stores/rootSpaces.js'
 import { paymentTypesStore } from './stores/paymentTypes.js'
 import { spaceTypesStore } from './stores/spaceTypes.js'
+import { localeStore } from './stores/locale.js'
 import api from './api/api.js'
 import MainMenu from './components/mainMenu.vue'
 import userMenu from './components/userMenu.vue'
@@ -89,9 +90,7 @@ export default {
       spaceTypes: null,
       taxTypes: null,
       allPaymentTypes: null,
-      //autoloadOptions: null
-
-
+      autoloadOptions: null
     }
   },
   computed: {
@@ -99,15 +98,14 @@ export default {
       return accountStore().account
     },
     dataLoaded() {
-      if( this.authCompleted && this.rootSpaces && this.saleTypes && this.saleTypeGroups && this.spaceTypes && this.taxTypes && this.allPaymentTypes 
-      ) {
+      if( this.authCompleted && this.rootSpaces && this.saleTypes && this.saleTypeGroups && this.spaceTypes && this.taxTypes && this.allPaymentTypes && this.autoloadOptions ) {
         return true
       } else {
         return false
       }
     },
     siteName () {
-      return optionsStore().site_name
+      return optionsStore().autoloadOptions.site_name.option_value
     },
     token() {
       return accountStore().token
@@ -119,23 +117,15 @@ export default {
     },
     loadInitialData () {
       //  options
-      /*
+      
       api.options.getAutoloadOptions().then( response => {
-        console.log(response.data)
-        let obj = {}
-        _.each(response.data, option => {
-          obj[option.option_name] = {
-            'id': option.id,
-            'option_value': option.option_value,
-            'autoload': option.autoload,
-            'is_json': option.is_json
-          }
-         })
-         console.log('obj', obj)
-        this.autoloadOptions = obj
+        optionsStore().setAutoloadOptions(response.data)
+        //set i18n to options default
+        localeStore().setComponentLocale(optionsStore().autoloadOptions.default_locale.option_value)
+        this.$i18n.locale = optionsStore().autoloadOptions.default_locale.option_value
+        this.autoloadOptions = 1
       })
-      */
-      //      this.autoloadOptions = 1
+      
       //  rootSpaces
       api.rootSpaces.getRootSpaces( this.token ).then( response => {
           rootSpacesStore().setRootSpaces( response.data.root_spaces_children_parents )

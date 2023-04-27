@@ -5,7 +5,7 @@ const options = {
   getAutoloadOptions: () => {
     const promise = axios({
       method: 'post',
-      url: 'api/options-get-autoload/'
+      url: '/api/options-get-autoload/'
     })
     return promise
   }

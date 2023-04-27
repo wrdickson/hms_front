@@ -1,7 +1,7 @@
 <template>
   <el-button-group>
     <template v-for="saleType in selectedGroup.saleTypes">
-      <el-button type="primary" size="small" plain @click="handleSelectSaleType(saleType)">
+      <el-button type="primary" plain @click="handleSelectSaleType(saleType)">
         {{saleType.title}}
       </el-button>
     </template>

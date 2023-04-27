@@ -30,6 +30,16 @@ const routes = [
       path: '/resView3',
       name: 'resView3',
       component: () => import('/src/views/resView3/resView3.vue')
+    },
+    {
+      path: '/houseAccountView',
+      name: 'houseAccountView',
+      component: ()=> import('/src/views/HouseAccount/HouseAccount.vue')
+    },
+    {
+      path: '/ShiftReport',
+      name: 'ShiftReport',
+      component: () => import('/src/views/ShiftReport/ShiftReport.vue')
     }
   ]
 

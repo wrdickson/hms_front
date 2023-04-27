@@ -6,7 +6,6 @@
       :data="allSaleItems"
       max-height="250"
       style="width: 100%"
-      show-summary
       stripe
     >
       <el-table-column prop="sale_datetime" width="143" label="Date"></el-table-column>
@@ -34,13 +33,13 @@
   </div>
 </template>
 
-<script>
+<script lang = "js">
   import api from '/src/api/api.js'
   import _ from 'lodash'
   import { accountStore } from '/src/stores/account.js'
   export default {
     name: 'FolioDisplay',
-    props: [ 'selectedReservation', 'folioViewerReloadKey'],
+    props: [ 'folioId', 'folioViewerReloadKey'],
     data () {
       return {
         folioDataLoaded: false,
@@ -68,9 +67,9 @@
     },
     methods: {
       getFolio1 () {
-        api.folios.getFolio1( this.token, this.selectedReservation.folio ).then( response => {
-        console.log(response.data)
-        console.log(JSON.stringify(response.data))
+        api.folios.getFolio1( this.token, this.folioId ).then( response => {
+        // console.log(response.data)
+        // console.log(JSON.stringify(response.data))
         // set as a non reactive property
         this.folioData = response.data.folio_to_array
         this.folioDataLoaded = true
@@ -78,7 +77,6 @@
       }
     },
     created () {
-      console.log('folioDisplay created')
       this.getFolio1()
     },
     watch: {

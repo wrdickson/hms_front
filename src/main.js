@@ -42,7 +42,7 @@ library.add(
 const pinia = createPinia()
 
 const i18n = createI18n({
-  locale: 'es',
+  locale: 'en',
   fallbackLocale: 'en',
   messages
 })

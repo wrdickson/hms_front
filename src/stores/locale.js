@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import es from 'element-plus/lib/locale/lang/es'
 import en from 'element-plus/lib/locale/lang/en'
-import dayjs from 'dayjs'
 
 export const localeStore = defineStore({
   id: 'locale',
