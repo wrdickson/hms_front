@@ -40,6 +40,11 @@ const routes = [
       path: '/ShiftReport',
       name: 'ShiftReport',
       component: () => import('/src/views/ShiftReport/ShiftReport.vue')
+    },
+    {
+      path: '/PeriodSales',
+      name: 'PeriodSales',
+      component: () => import('/src/views/PeriodSales/PeriodSales.vue')
     }
   ]
 

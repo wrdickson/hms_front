@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     handleLocaleChange ( locale ) {
-      localeStore().setComponentLocale(locale)
+      localeStore().setComponentLocale( locale )
     }
   }
 }

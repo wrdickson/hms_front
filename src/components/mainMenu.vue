@@ -19,6 +19,11 @@
       index="/ShiftReport">
       Shift Report
     </el-menu-item>
+    <el-menu-item
+      v-if="account.permission > 0"
+      index="/PeriodSales">
+      Period Sales
+    </el-menu-item>
 
 
   </el-menu>
