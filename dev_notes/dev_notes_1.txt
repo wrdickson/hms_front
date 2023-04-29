@@ -54,19 +54,16 @@ in App.vue so it cascades to all views???
 14.  Directory/file structure for components/views is a hot mess, especially with some of
 the first built components: reservationView, folioView etc.  Straighten this out.
 
+15. Consider version control on the back end.  At this point hms/api is its own repo and installer_uno 
+is its own repo.  At some point, they need to be combined[?] into the same repo.  I believe I structured 
+them so that this should be straightforward.
 
+16. On the backend, integrate phpmailer/phpmailer so we can send db backups and password reset requests.
 
+17. How does an admin or manager handle and track posting corrections?
 
+18. Permissions are a mess throughout front and back end.  Develop a scheme and implement it througout.
 
-
-
-
-
-
-
-
-
-
-
-
-
+19. Client-side and server-side validation is sketchily and only occassionally implemented at 
+present.  Integrate throughout, again maybe looking at composables on the client and ??
+on the server. 
