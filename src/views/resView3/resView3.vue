@@ -347,7 +347,7 @@ export default {
       return spaceRecords
     },
     tableHeight () {
-      return this.windowHeight - 110
+      return this.windowHeight - 100
     },
     tDateArray () {
       //  set a reactive locale to day.js for table header formatting

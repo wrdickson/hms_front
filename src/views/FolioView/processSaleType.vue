@@ -45,7 +45,7 @@
   </div>
 </template>
 
-<script lang="js">
+<script lang = "js">
 import { saleTypesStore } from '/src/stores/saleTypes.js'
 import { taxTypesStore } from '/src/stores/taxTypes.js'
 import _ from 'lodash'

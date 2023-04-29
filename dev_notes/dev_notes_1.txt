@@ -1,7 +1,72 @@
-Notes for 3/21/23
+TODO April 2023
 
-Look at hms_front spaceEdit.updateSpace() and how it calls api.rootSpaces.updateRootSpace to see how we should be doing loading signals to the user and how we should be doing error handling.
+1. Integrate currency.js on the front end and brick/money on the back end to handle
+currency math.  Include currency selection in install, saving the currency name, number,
+and decimal places in config[?] and options[?].  Tables payments, sale_items and
+sale_types switch currency columns to integer data types and the front and back
+end APIs adjust accordingly, using the options object on the front end, and config
+constants on the back end to do appropriate mutations of currency values as they go into
+and out of db.
 
-While we are making progress on config object editing to ensure that we do not corrupt the data, we have a long way to go.  Most of the work is in root space edit, where it is important to notice the injudicious use of the monster method Reservations::update_space_codes to adjust existing reservations.  At least, we should generate a return to be handled on the front end.  Right now, it operates in the blind on the server, and we have no idea if the execution was correct.
+2. Consider how period sales reports (has to?) report by sale_types.  If we have a series
+of presets for, say, room charge eg: private room high season, private room low season, dorm, 
+whatever, these are all reported individually.  Similarly, maybe retail items, where we
+want presets for food, beverges, or whatever will also be reported individually.
+The end user looking to aggregate sale and tax data will have to manually combine these
+items.  I think the solution is to introduce another layer of abstraction to 
+sale_types . . . where all similar items, eg retail merch, food & beverage, room
+charges, services etc can all be grouped in reporting.
 
-Also, in resView3 create reservation, it seems like we need to update available spaces from the getgo when editing a reservations.  If the user does not change the dates, the data in the space selector is not up to date.  The getaround is simply to change the date, then change it back to original, but this sucks.
+3. Time reporting in post quick sale or whatever it's called is janky.  WTF is going on 
+here?  Also, engage with the problem of sorting results so they appear in ascending order
+by datetime.  Why is this so difficult?  Perhaps datetime fields need to be
+changed to timestamp.  Yikes.
+
+4. Solve the problems of combining folios, transferring folios, splitting
+folios, etc.
+
+5. Enhance reporting of reservation history and notes.  Tracking of room assignments?  
+Tracking of folio assignments( YES ).
+
+6. Search and view by folio.
+
+7. Search and view by reservation.
+
+8. Database backup ,rebuilding, recovery.  Backup config stuff, too?
+
+9. Arrival/ departure reports that can be used in offline situations.  General 
+considerations of how one could use the system during power or internet outages.
+
+10. Toggle light/dark mode.
+
+11. Look at integrating composables deeper for things like loading, inclusion of
+account/token and other things that seem like boilerplate in many views and comonents.
+A very rough integration is in CreateReservation.vue to handle api request errors.  Does it
+even work???
+
+12. Get the slider into more views.
+
+13. Consider how rewView3 limits content of component resViewTable to the height of the window and makes 
+appropriate adjustments so content scrolls creating an efffective sticky header.
+This should be the behavior on [all?] views.  Perhaps this can move up to the containers
+in App.vue so it cascades to all views???
+
+14.  Directory/file structure for components/views is a hot mess, especially with some of
+the first built components: reservationView, folioView etc.  Straighten this out.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
