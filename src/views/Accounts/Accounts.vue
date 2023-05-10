@@ -66,7 +66,7 @@
             this.reloadTrigger += 1
             ElMessage({
               type: 'success',
-              message: 'Group was created.'
+              message: 'Account was created.'
             })
             //  close the create component
             this.displayCreateAccount = false

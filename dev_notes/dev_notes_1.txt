@@ -17,7 +17,7 @@ items.  I think the solution is to introduce another layer of abstraction to
 sale_types . . . where all similar items, eg retail merch, food & beverage, room
 charges, services etc can all be grouped in reporting.
 
-3. Time reporting in post quick sale or whatever it's called is janky.  WTF is going on 
+3. FIXED I THINK Time reporting in post quick sale or whatever it's called is janky.  WTF is going on 
 here?  Also, engage with the problem of sorting results so they appear in ascending order
 by datetime.  Why is this so difficult?  Perhaps datetime fields need to be
 changed to timestamp.  Yikes.
@@ -32,7 +32,7 @@ Tracking of folio assignments( YES ).
 
 7. Search and view by reservation.
 
-8. Database backup ,rebuilding, recovery.  Backup config stuff, too?
+8. Database backup, rebuilding, recovery.  Backup config stuff, too?
 
 9. Arrival/ departure reports that can be used in offline situations.  General 
 considerations of how one could use the system during power or internet outages.
@@ -46,7 +46,7 @@ even work???
 
 12. Get the slider into more views.
 
-13. Consider how rewView3 limits content of component resViewTable to the height of the window and makes 
+13. Consider how resView3 limits content of component resViewTable to the height of the window and makes 
 appropriate adjustments so content scrolls creating an efffective sticky header.
 This should be the behavior on [all?] views.  Perhaps this can move up to the containers
 in App.vue so it cascades to all views???
@@ -67,3 +67,6 @@ them so that this should be straightforward.
 19. Client-side and server-side validation is sketchily and only occassionally implemented at 
 present.  Integrate throughout, again maybe looking at composables on the client and ??
 on the server. 
+
+20.  Look at iss iat nbf etc in auth.  I think they're f-ed up.  The usage in password
+reset request is more correct.

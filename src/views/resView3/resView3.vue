@@ -78,6 +78,7 @@ import { rootSpacesStore } from '/src/stores/rootSpaces.js'
 import useHandleRequestError from '/src/composables/useHandleRequestError.js'
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
+import { ElLoading } from 'element-plus'
 
 
 export default {
@@ -347,7 +348,7 @@ export default {
       return spaceRecords
     },
     tableHeight () {
-      return this.windowHeight - 100
+      return this.windowHeight - 108
     },
     tDateArray () {
       //  set a reactive locale to day.js for table header formatting
@@ -403,8 +404,15 @@ export default {
       console.log('empty cell selected', obj)
     },
     getReservations () {
+      //  trigger full-screen loading
+      const loading = ElLoading.service({
+        lock: true,
+        text: 'Loading',
+        background: 'rgba(0, 0, 0, 0.7)',
+      })
       api.reservations.getReservationsByRange( this.resViewStartDate, this.resViewEndDate, this.token)
       .then( (response) => {
+        loading.close()
         console.log('res fetch from rv3 getR()')
         this.reservations = response.data.reservations
         this.componentTrigger += 1

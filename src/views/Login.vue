@@ -27,6 +27,12 @@
               </el-button>
             </el-form-item>
           </el-form>
+          <hr/>
+          <el-form>
+            <el-form-item>
+              <el-button type="warning" @click="sendResetLink">Send reset link</el-button>
+            </el-form-item>
+          </el-form>
         </el-card>
       </el-col>
     </el-row>
@@ -37,6 +43,7 @@
 import { ElMessage } from 'element-plus'
 import api from './../api/api.js'
 import { accountStore } from './../stores/account.js'
+import { optionsStore } from './../stores/options.js'
 
 export default {
   name: 'Login',
@@ -50,9 +57,10 @@ export default {
     }
   },
   computed: {
-    accountId: function () { return accountStore.account.id },
-    jwt: function () { return accountStore.state.jwt },
-    username: function () { return accountStore.account.username }
+    accountId() { return accountStore().account.id },
+    jwt() { return accountStore().state.jwt },
+    siteName() { return optionsStore().autoloadOptions.site_name.option_value },
+    username() { return accountStore().account.username }
   },
   methods: {
     loginCheck () {
@@ -92,7 +100,26 @@ export default {
       }).catch( error => {
         console.log(error)
       })
+    },
+    sendResetLink () {
+      console.log('sendResetLink()')
+      if( this.username1.length > 4 ) {
+        api.account.sendResetLink(this.username1, this.siteName)
+      } else {
+        ElMessage({
+          message: 'Please enter your username',
+          type: 'warning',
+          center: true
+        })
+      }
+
     }
+  },
+  mounted () {
+    console.log(import.meta.url)
+    //console.log(import.meta.env)
+    console.log(import.meta.env.DEV)
+    //console.log(import.meta.env.PROD)
   }
 }
 </script>

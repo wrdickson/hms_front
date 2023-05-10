@@ -44,6 +44,17 @@ const account = {
     })
     return promise
   },
+  sendResetLink: ( username, siteName ) => {
+    const promise = axios({
+      method: 'post',
+      data: {
+        username: username,
+        siteName: siteName
+      },
+      url: 'api/accounts/reset-link-request/'
+    })
+    return promise
+  },
   updateAccount: ( token, obj ) => {
     const promise = axios({
       method: 'post',
