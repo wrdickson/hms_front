@@ -9,7 +9,7 @@ const account = {
         username: username,
         password: password
       },
-      url: 'api/login'
+      url: 'api/login/'
     })
     return request
   },

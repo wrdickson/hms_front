@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 
 const routes = [
     {
@@ -29,6 +29,9 @@ const routes = [
     {
       path: '/resView3',
       name: 'resView3',
+      meta: {
+        title: 'Reservation View'
+      },
       component: () => import('/src/views/resView3/resView3.vue')
     },
     {
@@ -49,8 +52,14 @@ const routes = [
   ]
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHashHistory(),
     routes
+})
+
+router.beforeEach((toRoute, fromRoute, next) => {
+  window.document.title = toRoute.meta && toRoute.meta.title ? toRoute.meta.title : 'Home';
+
+  next();
 })
 
 export default router

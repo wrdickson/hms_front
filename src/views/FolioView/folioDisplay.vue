@@ -33,7 +33,7 @@
   </div>
 </template>
 
-<script lang = "js">
+<script>
   import api from '/src/api/api.js'
   import _ from 'lodash'
   import { accountStore } from '/src/stores/account.js'

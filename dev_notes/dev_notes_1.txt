@@ -41,7 +41,7 @@ considerations of how one could use the system during power or internet outages.
 
 11. Look at integrating composables deeper for things like loading, inclusion of
 account/token and other things that seem like boilerplate in many views and comonents.
-A very rough integration is in CreateReservation.vue to handle api request errors.  Does it
+A very rough integration is in resView3.vue to handle api request errors.  Does it
 even work???
 
 12. Get the slider into more views.
