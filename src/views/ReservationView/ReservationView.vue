@@ -32,6 +32,9 @@
       <span>
         <el-button @click="showFolioDialog = true" type="primary">Folio</el-button>
       </span>
+      <span>
+        <el-button @click="showFolio2" type="primary">Folio2</el-button>
+      </span>
     </div>
     <el-collapse>
       <el-collapse-item title="Edit Reservation" name="2">
@@ -200,6 +203,10 @@
         }).catch( error => {
           this.handleRequestError( error )
         })
+      },
+      showFolio2 () {
+        console.log(this.selectedReservation.folio)
+        this.$router.push('/FolioView/' + this.selectedReservation.folio)
       }
     },
     mounted () {

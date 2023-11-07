@@ -14,5 +14,4 @@ export const paymentTypesStore = defineStore({
       this.allPaymentTypes = allPaymentTypes
     }
   }
-
 })

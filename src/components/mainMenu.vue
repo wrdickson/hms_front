@@ -24,6 +24,14 @@
       index="/PeriodSales">
       Period Sales
     </el-menu-item>
+    <el-menu-item
+      index="/FolioView">
+      Folio View
+    </el-menu-item>
+    <el-menu-item
+      index="/XStateDemo">
+      XStateDemo
+    </el-menu-item>
 
 
   </el-menu>

@@ -11,6 +11,12 @@ const routes = [
       name: 'Dashboard',
       component: () => import('/src/views/Dashboard/Dashboard.vue')
     },
+    { 
+      path: '/FolioView/:id',
+      name: 'FolioView',
+      component: () => import('/src/views/FolioView.vue'),
+      meta: { title: `Folio` }
+    },
     {
       path: '/Home',
       name: 'Home',
@@ -48,6 +54,11 @@ const routes = [
       path: '/PeriodSales',
       name: 'PeriodSales',
       component: () => import('/src/views/PeriodSales/PeriodSales.vue')
+    },
+    {
+      path: '/XStateDemo',
+      name: 'XStateDemo',
+      component: () => import('/src/views/XStateDemo.vue')
     }
   ]
 
@@ -57,8 +68,11 @@ const router = createRouter({
 })
 
 router.beforeEach((toRoute, fromRoute, next) => {
-  window.document.title = toRoute.meta && toRoute.meta.title ? toRoute.meta.title : 'Home';
-
+  console.log('beforeEach()', toRoute, fromRoute)
+  console.log(toRoute.params.id)
+  if( toRoute.params.id) {
+    window.document.title = toRoute.meta.title && toRoute.params.id ? toRoute.meta.title + toRoute.params.id : toRoute.meta.title;
+  }
   next();
 })
 
